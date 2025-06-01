@@ -1,10 +1,15 @@
 import "dotenv/config";
 
 import { Client, GatewayIntentBits, REST, Routes } from "discord.js";
+import { getRedisClient, handleRedisConnection } from "./redis";
 
 import commands from "./commands/commands";
 import interactionCreate from "./events/interactionCreate";
 import messageCreate from "./events/messageCreate";
+
+(async () => {
+  await handleRedisConnection();
+})();
 
 const client = new Client({
   intents: [
@@ -27,8 +32,6 @@ client.once("ready", async () => {
   const rest = new REST().setToken(process.env.TOKEN);
 
   try {
-    console.log("Started registering application (/) commands.");
-
     // To support multiple guilds, use Routes.applicationCommands
     await rest.put(
       Routes.applicationGuildCommands(
@@ -38,7 +41,7 @@ client.once("ready", async () => {
       { body: commands }
     );
 
-    console.log("Successfully registering application (/) commands.");
+    console.log("Successfully registered application (/) commands");
   } catch (error) {
     console.error(error);
   }
@@ -46,6 +49,20 @@ client.once("ready", async () => {
 
 client.on("interactionCreate", interactionCreate);
 client.on("messageCreate", messageCreate);
+
+async function shutdown() {
+  if (getRedisClient()?.isOpen) {
+    console.log("Shutting down the Redis connection...");
+    await getRedisClient().quit();
+  }
+  if (client.isReady()) {
+    console.log("Shutting down the Discord client...");
+    client.destroy();
+  }
+}
+
+process.on("SIGINT", shutdown);
+process.on("SIGTERM", shutdown);
 
 if (!process.env.TOKEN) {
   console.error("Error: TOKEN environment variable is not defined");
