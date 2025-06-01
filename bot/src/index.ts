@@ -1,11 +1,18 @@
 import "dotenv/config";
 
-import { Client, Interaction, REST, Routes } from "discord.js";
+import { Client, GatewayIntentBits, REST, Routes } from "discord.js";
 
 import commands from "./commands/commands";
 import interactionCreate from "./events/interactionCreate";
+import messageCreate from "./events/messageCreate";
 
-const client = new Client({ intents: [] });
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+  ],
+});
 
 client.once("ready", async () => {
   console.log(`Logged in as ${client.user?.tag}`);
@@ -37,9 +44,8 @@ client.once("ready", async () => {
   }
 });
 
-client.on("interactionCreate", async (interaction: Interaction) => {
-  await interactionCreate(interaction);
-});
+client.on("interactionCreate", interactionCreate);
+client.on("messageCreate", messageCreate);
 
 if (!process.env.TOKEN) {
   console.error("Error: TOKEN environment variable is not defined");
