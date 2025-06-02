@@ -1,13 +1,29 @@
-import { Message } from "discord.js";
+import { GuildTextBasedChannel, Message } from "discord.js";
+
 import { getRedisClient } from "../redis";
 
 export default async (message: Message) => {
-  if (message.author.id === message.client.user?.id) {
+  if (message.author.id === message.client.user?.id || !message.guild) {
     return;
   }
 
-  const redisClient = getRedisClient();
+  const channelName = (message.channel as GuildTextBasedChannel)?.name;
+  if (!channelName) {
+    return;
+  }
 
-  await redisClient.set("author", `${message.author.id}`);
-  await redisClient.set("message", `${message.content}`);
+  const messageEntry: Record<string, string> = {
+    id: message.id,
+    content: message.content,
+    authorID: message.author.id,
+    authorUsername: message.author.username,
+    channelID: message.channel.id,
+    channelName: channelName,
+    guildID: message.guild.id,
+    guildName: message.guild.name,
+    createdTimestamp: message.createdTimestamp.toString(),
+  };
+
+  const redisClient = getRedisClient();
+  redisClient.xAdd("messageStream", "*", messageEntry);
 };
