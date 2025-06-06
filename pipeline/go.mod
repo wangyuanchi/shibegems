@@ -1,4 +1,4 @@
-module github.com/wangyuanchi/shibegems/worker
+module github.com/wangyuanchi/shibegems/pipeline
 
 go 1.24.3
 
