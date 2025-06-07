@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
+	"github.com/wangyuanchi/shibegems/pipeline/utils"
 )
 
 func RunConsumer(wg *sync.WaitGroup, ctx context.Context, client *redis.Client, streamName, consumerGroupName, consumerName string) {
@@ -14,11 +15,50 @@ func RunConsumer(wg *sync.WaitGroup, ctx context.Context, client *redis.Client, 
 	for {
 		select {
 		case <-ctx.Done(): // Only selected when cancel() is called
-			log.Printf("%v is exiting...", consumerName)
+			log.Printf("[%v] Exiting...", consumerName)
 			return
 		default:
-			log.Println("Reading from Redis stream...")
-			time.Sleep(5000 * time.Millisecond)
+			res, err := client.XReadGroup(ctx, &redis.XReadGroupArgs{
+				Group:    consumerGroupName,
+				Consumer: consumerName,
+				Streams:  []string{streamName, ">"},
+				Count:    5,
+				Block:    5 * time.Second,
+			}).Result()
+
+			if err != nil && err != redis.Nil {
+				log.Printf("[%v] Redis Read Error: %v", consumerName, err)
+				continue
+			}
+
+			if res == nil {
+				log.Printf("[%v] No messages in Redis %v, retrying...", consumerName, streamName)
+				continue
+			}
+
+			for _, stream := range res {
+				log.Printf("[%v] Read %v messages from Redis %v", consumerName, len(stream.Messages), streamName)
+
+				for _, message := range stream.Messages {
+					messageEntry := message.Values
+					utils.CalculateChance(messageEntry) // Assuming always successful for now
+
+					err := client.XAck(ctx, streamName, consumerGroupName, message.ID).Err()
+					if err != nil {
+						log.Printf("[%v] Failed to acknowledge message entry %v: %v", consumerName, message.ID, err)
+						continue
+					}
+
+					deleted, err := client.XDel(ctx, streamName, message.ID).Result()
+					if err != nil {
+						log.Printf("[%v] Failed to delete message entry %v: %v", consumerName, message.ID, err)
+					} else if deleted == 0 {
+						log.Printf("[%v] Message entry %v was already deleted", consumerName, message.ID)
+					} else {
+						log.Printf("[%v] Acknowledged and deleted message entry %v", consumerName, message.ID)
+					}
+				}
+			}
 		}
 	}
 }

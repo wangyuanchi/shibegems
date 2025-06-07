@@ -45,7 +45,7 @@ func main() {
 	var wg sync.WaitGroup
 	streamName := "messageStream"
 	consumerGroupName := "messageStreamConsumerGroup"
-	numConsumers := 3
+	numConsumers := 2
 
 	rdb.CreateConsumerGroup(ctx, client, streamName, consumerGroupName)
 	for i := 1; i <= numConsumers; i++ {
