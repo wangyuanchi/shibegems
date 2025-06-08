@@ -9,13 +9,16 @@ import (
 	"sync"
 	"syscall"
 
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 	"github.com/redis/go-redis/v9"
+	"github.com/wangyuanchi/shibegems/pipeline/pgdb/legacy"
+	"github.com/wangyuanchi/shibegems/pipeline/pgdb/postgres"
 	"github.com/wangyuanchi/shibegems/pipeline/rdb"
 )
 
 func main() {
-
+	// Load environment variables
 	godotenv.Load(".env")
 
 	redisURL := os.Getenv("REDIS_URL")
@@ -28,10 +31,18 @@ func main() {
 		log.Fatalf("Error parsing REDIS_URL: %v", err)
 	}
 
-	client := redis.NewClient(opt)
-	defer client.Close()
+	postgresURL := os.Getenv("POSTGRES_URL")
+	if postgresURL == "" {
+		log.Fatal("POSTGRES_URL is not found in the environment")
+	}
+
+	// Context that is used throughout the pipeline
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+
+	// Connect to Redis client
+	client := redis.NewClient(opt)
+	defer client.Close()
 
 	_, err = client.Ping(ctx).Result()
 	if err != nil {
@@ -39,6 +50,22 @@ func main() {
 	}
 	log.Println("Connected to Redis")
 
+	// Connect to Postgres database
+	pool, err := pgxpool.New(ctx, postgresURL)
+	if err != nil {
+		log.Fatalf("Unable to create connection pool: %v", err)
+	}
+	log.Println("Connected to Postgres")
+	defer pool.Close()
+	pgq := postgres.New(pool)
+
+	/*
+		This performs the data migration to the "gems" table
+		An additional "backup" table is also manually created
+	*/
+	legacy.Migrate(ctx, pgq, "./pgdb/legacy/gems.json", false)
+
+	// Main task of this pipeline
 	sigCh := make(chan os.Signal, 1)
 	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
 
@@ -51,6 +78,7 @@ func main() {
 	for i := 1; i <= numConsumers; i++ {
 		consumerName := "consumer-" + strconv.Itoa(i)
 		wg.Add(1)
+		log.Printf("[%v] Starting...", consumerName)
 		go rdb.RunConsumer(&wg, ctx, client, streamName, consumerGroupName, consumerName)
 	}
 
@@ -58,5 +86,6 @@ func main() {
 	cancel()
 	wg.Wait()
 	log.Println("All consumers exited")
+	log.Println("Shutting down the Postgres connection...")
 	log.Println("Shutting down the Redis connection...")
 }
