@@ -72,10 +72,13 @@ func main() {
 	var wg sync.WaitGroup
 	streamName := "messageStream"
 	consumerGroupName := "messageStreamConsumerGroup"
-	numConsumers := 2
-
 	rdb.CreateConsumerGroup(ctx, client, streamName, consumerGroupName)
-	for i := 1; i <= numConsumers; i++ {
+
+	wg.Add(1)
+	log.Printf("[reclaimer] Starting...")
+	go rdb.RunReclaimer(&wg, ctx, pgq, client, streamName, consumerGroupName, "reclaimer")
+
+	for i := 1; i <= 2; i++ {
 		consumerName := "consumer-" + strconv.Itoa(i)
 		wg.Add(1)
 		log.Printf("[%v] Starting...", consumerName)

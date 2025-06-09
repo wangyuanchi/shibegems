@@ -34,46 +34,88 @@ func RunConsumer(wg *sync.WaitGroup, ctx context.Context, pgq *postgres.Queries,
 			}
 
 			if res == nil {
-				log.Printf("[%v] No messages in Redis %v, retrying...", consumerName, streamName)
+				// log.Printf("[%v] No messages in Redis %v, retrying...", consumerName, streamName)
 				continue
 			}
 
 			for _, stream := range res {
 				log.Printf("[%v] Read %v messages from Redis %v", consumerName, len(stream.Messages), streamName)
-
-				for _, message := range stream.Messages {
-					messageEntry := message.Values
-
-					// Type conversion without error checking
-					guildID, _ := strconv.ParseInt(messageEntry["guildID"].(string), 10, 64)
-					authorID, _ := strconv.ParseInt(messageEntry["authorID"].(string), 10, 64)
-
-					gem := utils.RollRNG()
-					if gem != nil {
-						err := utils.UpsertGem(ctx, pgq, authorID, guildID, gem.Name, 1)
-						if err != nil {
-							log.Printf("[%v] Failed to upsert gem: %v", consumerName, err)
-							continue // Left in pending entries list
-						}
-						log.Printf("[%v] %v found a %v!", consumerName, authorID, gem.Name)
-					}
-
-					err := client.XAck(ctx, streamName, consumerGroupName, message.ID).Err()
-					if err != nil {
-						log.Printf("[%v] Failed to acknowledge message entry %v: %v", consumerName, message.ID, err)
-						continue
-					}
-
-					deleted, err := client.XDel(ctx, streamName, message.ID).Result()
-					if err != nil {
-						log.Printf("[%v] Failed to delete message entry %v: %v", consumerName, message.ID, err)
-					} else if deleted == 0 {
-						log.Printf("[%v] Message entry %v was already deleted", consumerName, message.ID)
-					} else {
-						log.Printf("[%v] Acknowledged and deleted message entry %v", consumerName, message.ID)
-					}
-				}
+				processAcknowledgeDelete(ctx, pgq, client, stream, streamName, consumerGroupName, consumerName)
 			}
+		}
+	}
+}
+
+func RunReclaimer(wg *sync.WaitGroup, ctx context.Context, pgq *postgres.Queries, client *redis.Client, streamName, consumerGroupName, consumerName string) {
+	ticker := time.NewTicker(5 * time.Minute) // First tick in 5 minutes, not instantly
+	defer ticker.Stop()
+	defer wg.Done()
+	for {
+		select {
+		case <-ctx.Done(): // Only selected when cancel() is called
+			log.Printf("[%v] Exiting...", consumerName)
+			return
+		case <-ticker.C:
+			claimed, _, err := client.XAutoClaim(ctx, &redis.XAutoClaimArgs{
+				Stream:   streamName,
+				Group:    consumerGroupName,
+				Consumer: consumerName,
+				MinIdle:  100 * time.Second,
+				Start:    "0",
+				Count:    50,
+			}).Result()
+
+			if err != nil {
+				log.Printf("[%s] Redis Autoclaim error: %v", consumerName, err)
+				continue
+			}
+
+			if len(claimed) == 0 {
+				// log.Printf("[%v] No stale message entries to reclaim", consumerName)
+				continue
+			}
+			log.Printf("[%v] Claimed %v stale message entries", consumerName, len(claimed))
+
+			stream := redis.XStream{
+				Stream:   streamName,
+				Messages: claimed,
+			}
+			processAcknowledgeDelete(ctx, pgq, client, stream, streamName, consumerGroupName, consumerName)
+		}
+	}
+}
+
+func processAcknowledgeDelete(ctx context.Context, pgq *postgres.Queries, client *redis.Client, stream redis.XStream, streamName, consumerGroupName, consumerName string) {
+	for _, message := range stream.Messages {
+		messageEntry := message.Values
+
+		// Type conversion without error checking
+		guildID, _ := strconv.ParseInt(messageEntry["guildID"].(string), 10, 64)
+		authorID, _ := strconv.ParseInt(messageEntry["authorID"].(string), 10, 64)
+
+		gem := utils.RollRNG()
+		if gem != nil {
+			err := utils.UpsertGem(ctx, pgq, authorID, guildID, gem.Name, 1)
+			if err != nil {
+				log.Printf("[%v] Failed to upsert gem: %v", consumerName, err)
+				continue // Left in pending entries list
+			}
+			log.Printf("[%v] %v found a %v!", consumerName, authorID, gem.Name)
+		}
+
+		err := client.XAck(ctx, streamName, consumerGroupName, message.ID).Err()
+		if err != nil {
+			log.Printf("[%v] Failed to acknowledge message entry %v: %v", consumerName, message.ID, err)
+			continue
+		}
+
+		deleted, err := client.XDel(ctx, streamName, message.ID).Result()
+		if err != nil {
+			log.Printf("[%v] Failed to delete message entry %v: %v", consumerName, message.ID, err)
+		} else if deleted == 0 {
+			log.Printf("[%v] Message entry %v was already deleted", consumerName, message.ID)
+		} else {
+			log.Printf("[%v] Acknowledged and deleted message entry %v", consumerName, message.ID)
 		}
 	}
 }
