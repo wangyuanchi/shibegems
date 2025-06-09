@@ -41,7 +41,12 @@ func RunConsumer(wg *sync.WaitGroup, ctx context.Context, client *redis.Client, 
 
 				for _, message := range stream.Messages {
 					messageEntry := message.Values
-					utils.CalculateChance(messageEntry) // Assuming always successful for now
+
+					gem := utils.RollRNG()
+					if gem != nil {
+						// Add to DB
+						log.Printf("[%v] %v found a %v!", consumerName, messageEntry["authorID"], gem.Name)
+					}
 
 					err := client.XAck(ctx, streamName, consumerGroupName, message.ID).Err()
 					if err != nil {

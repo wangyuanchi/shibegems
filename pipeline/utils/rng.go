@@ -1,5 +1,18 @@
 package utils
 
-func CalculateChance(messageEntry map[string]interface{}) {
-	return
+import (
+	"math/rand/v2"
+)
+
+func RollRNG() *Gem {
+	r := rand.Float64()
+	var cumulative float64
+
+	for _, gem := range Gems {
+		cumulative += gem.Chance
+		if r < cumulative {
+			return &gem
+		}
+	}
+	return nil
 }
