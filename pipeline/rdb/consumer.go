@@ -3,14 +3,16 @@ package rdb
 import (
 	"context"
 	"log"
+	"strconv"
 	"sync"
 	"time"
 
 	"github.com/redis/go-redis/v9"
+	"github.com/wangyuanchi/shibegems/pipeline/pgdb/postgres"
 	"github.com/wangyuanchi/shibegems/pipeline/utils"
 )
 
-func RunConsumer(wg *sync.WaitGroup, ctx context.Context, client *redis.Client, streamName, consumerGroupName, consumerName string) {
+func RunConsumer(wg *sync.WaitGroup, ctx context.Context, pgq *postgres.Queries, client *redis.Client, streamName, consumerGroupName, consumerName string) {
 	defer wg.Done()
 	for {
 		select {
@@ -42,10 +44,18 @@ func RunConsumer(wg *sync.WaitGroup, ctx context.Context, client *redis.Client, 
 				for _, message := range stream.Messages {
 					messageEntry := message.Values
 
+					// Type conversion without error checking
+					guildID, _ := strconv.ParseInt(messageEntry["guildID"].(string), 10, 64)
+					authorID, _ := strconv.ParseInt(messageEntry["authorID"].(string), 10, 64)
+
 					gem := utils.RollRNG()
 					if gem != nil {
-						// Add to DB
-						log.Printf("[%v] %v found a %v!", consumerName, messageEntry["authorID"], gem.Name)
+						err := utils.UpsertGem(ctx, pgq, authorID, guildID, gem.Name, 1)
+						if err != nil {
+							log.Printf("[%v] Failed to upsert gem: %v", consumerName, err)
+							continue // Left in pending entries list
+						}
+						log.Printf("[%v] %v found a %v!", consumerName, authorID, gem.Name)
 					}
 
 					err := client.XAck(ctx, streamName, consumerGroupName, message.ID).Err()

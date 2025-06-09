@@ -79,7 +79,7 @@ func main() {
 		consumerName := "consumer-" + strconv.Itoa(i)
 		wg.Add(1)
 		log.Printf("[%v] Starting...", consumerName)
-		go rdb.RunConsumer(&wg, ctx, client, streamName, consumerGroupName, consumerName)
+		go rdb.RunConsumer(&wg, ctx, pgq, client, streamName, consumerGroupName, consumerName)
 	}
 
 	<-sigCh

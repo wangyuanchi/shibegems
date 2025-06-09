@@ -71,3 +71,354 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (Gem, er
 	)
 	return i, err
 }
+
+const upsertAmethyst = `-- name: UpsertAmethyst :one
+INSERT INTO gems (user_id, guild_id, amethyst)
+VALUES ($1, $2, $3)
+ON CONFLICT (user_id, guild_id)
+DO UPDATE SET amethyst = gems.amethyst + EXCLUDED.amethyst
+RETURNING user_id, guild_id, amethyst
+`
+
+type UpsertAmethystParams struct {
+	UserID   int64
+	GuildID  int64
+	Amethyst int32
+}
+
+type UpsertAmethystRow struct {
+	UserID   int64
+	GuildID  int64
+	Amethyst int32
+}
+
+func (q *Queries) UpsertAmethyst(ctx context.Context, arg UpsertAmethystParams) (UpsertAmethystRow, error) {
+	row := q.db.QueryRow(ctx, upsertAmethyst, arg.UserID, arg.GuildID, arg.Amethyst)
+	var i UpsertAmethystRow
+	err := row.Scan(&i.UserID, &i.GuildID, &i.Amethyst)
+	return i, err
+}
+
+const upsertAquamarine = `-- name: UpsertAquamarine :one
+INSERT INTO gems (user_id, guild_id, aquamarine)
+VALUES ($1, $2, $3)
+ON CONFLICT (user_id, guild_id)
+DO UPDATE SET aquamarine = gems.aquamarine + EXCLUDED.aquamarine
+RETURNING user_id, guild_id, aquamarine
+`
+
+type UpsertAquamarineParams struct {
+	UserID     int64
+	GuildID    int64
+	Aquamarine int32
+}
+
+type UpsertAquamarineRow struct {
+	UserID     int64
+	GuildID    int64
+	Aquamarine int32
+}
+
+func (q *Queries) UpsertAquamarine(ctx context.Context, arg UpsertAquamarineParams) (UpsertAquamarineRow, error) {
+	row := q.db.QueryRow(ctx, upsertAquamarine, arg.UserID, arg.GuildID, arg.Aquamarine)
+	var i UpsertAquamarineRow
+	err := row.Scan(&i.UserID, &i.GuildID, &i.Aquamarine)
+	return i, err
+}
+
+const upsertCitrine = `-- name: UpsertCitrine :one
+INSERT INTO gems (user_id, guild_id, citrine)
+VALUES ($1, $2, $3)
+ON CONFLICT (user_id, guild_id)
+DO UPDATE SET citrine = gems.citrine + EXCLUDED.citrine
+RETURNING user_id, guild_id, citrine
+`
+
+type UpsertCitrineParams struct {
+	UserID  int64
+	GuildID int64
+	Citrine int32
+}
+
+type UpsertCitrineRow struct {
+	UserID  int64
+	GuildID int64
+	Citrine int32
+}
+
+func (q *Queries) UpsertCitrine(ctx context.Context, arg UpsertCitrineParams) (UpsertCitrineRow, error) {
+	row := q.db.QueryRow(ctx, upsertCitrine, arg.UserID, arg.GuildID, arg.Citrine)
+	var i UpsertCitrineRow
+	err := row.Scan(&i.UserID, &i.GuildID, &i.Citrine)
+	return i, err
+}
+
+const upsertDiamond = `-- name: UpsertDiamond :one
+INSERT INTO gems (user_id, guild_id, diamond)
+VALUES ($1, $2, $3)
+ON CONFLICT (user_id, guild_id)
+DO UPDATE SET diamond = gems.diamond + EXCLUDED.diamond
+RETURNING user_id, guild_id, diamond
+`
+
+type UpsertDiamondParams struct {
+	UserID  int64
+	GuildID int64
+	Diamond int32
+}
+
+type UpsertDiamondRow struct {
+	UserID  int64
+	GuildID int64
+	Diamond int32
+}
+
+func (q *Queries) UpsertDiamond(ctx context.Context, arg UpsertDiamondParams) (UpsertDiamondRow, error) {
+	row := q.db.QueryRow(ctx, upsertDiamond, arg.UserID, arg.GuildID, arg.Diamond)
+	var i UpsertDiamondRow
+	err := row.Scan(&i.UserID, &i.GuildID, &i.Diamond)
+	return i, err
+}
+
+const upsertGarnet = `-- name: UpsertGarnet :one
+INSERT INTO gems (user_id, guild_id, garnet)
+VALUES ($1, $2, $3)
+ON CONFLICT (user_id, guild_id)
+DO UPDATE SET garnet = gems.garnet + EXCLUDED.garnet
+RETURNING user_id, guild_id, garnet
+`
+
+type UpsertGarnetParams struct {
+	UserID  int64
+	GuildID int64
+	Garnet  int32
+}
+
+type UpsertGarnetRow struct {
+	UserID  int64
+	GuildID int64
+	Garnet  int32
+}
+
+func (q *Queries) UpsertGarnet(ctx context.Context, arg UpsertGarnetParams) (UpsertGarnetRow, error) {
+	row := q.db.QueryRow(ctx, upsertGarnet, arg.UserID, arg.GuildID, arg.Garnet)
+	var i UpsertGarnetRow
+	err := row.Scan(&i.UserID, &i.GuildID, &i.Garnet)
+	return i, err
+}
+
+const upsertJade = `-- name: UpsertJade :one
+INSERT INTO gems (user_id, guild_id, jade)
+VALUES ($1, $2, $3)
+ON CONFLICT (user_id, guild_id)
+DO UPDATE SET jade = gems.jade + EXCLUDED.jade
+RETURNING user_id, guild_id, jade
+`
+
+type UpsertJadeParams struct {
+	UserID  int64
+	GuildID int64
+	Jade    int32
+}
+
+type UpsertJadeRow struct {
+	UserID  int64
+	GuildID int64
+	Jade    int32
+}
+
+func (q *Queries) UpsertJade(ctx context.Context, arg UpsertJadeParams) (UpsertJadeRow, error) {
+	row := q.db.QueryRow(ctx, upsertJade, arg.UserID, arg.GuildID, arg.Jade)
+	var i UpsertJadeRow
+	err := row.Scan(&i.UserID, &i.GuildID, &i.Jade)
+	return i, err
+}
+
+const upsertKunzite = `-- name: UpsertKunzite :one
+INSERT INTO gems (user_id, guild_id, kunzite)
+VALUES ($1, $2, $3)
+ON CONFLICT (user_id, guild_id)
+DO UPDATE SET kunzite = gems.kunzite + EXCLUDED.kunzite
+RETURNING user_id, guild_id, kunzite
+`
+
+type UpsertKunziteParams struct {
+	UserID  int64
+	GuildID int64
+	Kunzite int32
+}
+
+type UpsertKunziteRow struct {
+	UserID  int64
+	GuildID int64
+	Kunzite int32
+}
+
+func (q *Queries) UpsertKunzite(ctx context.Context, arg UpsertKunziteParams) (UpsertKunziteRow, error) {
+	row := q.db.QueryRow(ctx, upsertKunzite, arg.UserID, arg.GuildID, arg.Kunzite)
+	var i UpsertKunziteRow
+	err := row.Scan(&i.UserID, &i.GuildID, &i.Kunzite)
+	return i, err
+}
+
+const upsertPainite = `-- name: UpsertPainite :one
+INSERT INTO gems (user_id, guild_id, painite)
+VALUES ($1, $2, $3)
+ON CONFLICT (user_id, guild_id)
+DO UPDATE SET painite = gems.painite + EXCLUDED.painite
+RETURNING user_id, guild_id, painite
+`
+
+type UpsertPainiteParams struct {
+	UserID  int64
+	GuildID int64
+	Painite int32
+}
+
+type UpsertPainiteRow struct {
+	UserID  int64
+	GuildID int64
+	Painite int32
+}
+
+func (q *Queries) UpsertPainite(ctx context.Context, arg UpsertPainiteParams) (UpsertPainiteRow, error) {
+	row := q.db.QueryRow(ctx, upsertPainite, arg.UserID, arg.GuildID, arg.Painite)
+	var i UpsertPainiteRow
+	err := row.Scan(&i.UserID, &i.GuildID, &i.Painite)
+	return i, err
+}
+
+const upsertPeridot = `-- name: UpsertPeridot :one
+INSERT INTO gems (user_id, guild_id, peridot)
+VALUES ($1, $2, $3)
+ON CONFLICT (user_id, guild_id)
+DO UPDATE SET peridot = gems.peridot + EXCLUDED.peridot
+RETURNING user_id, guild_id, peridot
+`
+
+type UpsertPeridotParams struct {
+	UserID  int64
+	GuildID int64
+	Peridot int32
+}
+
+type UpsertPeridotRow struct {
+	UserID  int64
+	GuildID int64
+	Peridot int32
+}
+
+func (q *Queries) UpsertPeridot(ctx context.Context, arg UpsertPeridotParams) (UpsertPeridotRow, error) {
+	row := q.db.QueryRow(ctx, upsertPeridot, arg.UserID, arg.GuildID, arg.Peridot)
+	var i UpsertPeridotRow
+	err := row.Scan(&i.UserID, &i.GuildID, &i.Peridot)
+	return i, err
+}
+
+const upsertRuby = `-- name: UpsertRuby :one
+INSERT INTO gems (user_id, guild_id, ruby)
+VALUES ($1, $2, $3)
+ON CONFLICT (user_id, guild_id)
+DO UPDATE SET ruby = gems.ruby + EXCLUDED.ruby
+RETURNING user_id, guild_id, ruby
+`
+
+type UpsertRubyParams struct {
+	UserID  int64
+	GuildID int64
+	Ruby    int32
+}
+
+type UpsertRubyRow struct {
+	UserID  int64
+	GuildID int64
+	Ruby    int32
+}
+
+func (q *Queries) UpsertRuby(ctx context.Context, arg UpsertRubyParams) (UpsertRubyRow, error) {
+	row := q.db.QueryRow(ctx, upsertRuby, arg.UserID, arg.GuildID, arg.Ruby)
+	var i UpsertRubyRow
+	err := row.Scan(&i.UserID, &i.GuildID, &i.Ruby)
+	return i, err
+}
+
+const upsertSapphire = `-- name: UpsertSapphire :one
+INSERT INTO gems (user_id, guild_id, sapphire)
+VALUES ($1, $2, $3)
+ON CONFLICT (user_id, guild_id)
+DO UPDATE SET sapphire = gems.sapphire + EXCLUDED.sapphire
+RETURNING user_id, guild_id, sapphire
+`
+
+type UpsertSapphireParams struct {
+	UserID   int64
+	GuildID  int64
+	Sapphire int32
+}
+
+type UpsertSapphireRow struct {
+	UserID   int64
+	GuildID  int64
+	Sapphire int32
+}
+
+func (q *Queries) UpsertSapphire(ctx context.Context, arg UpsertSapphireParams) (UpsertSapphireRow, error) {
+	row := q.db.QueryRow(ctx, upsertSapphire, arg.UserID, arg.GuildID, arg.Sapphire)
+	var i UpsertSapphireRow
+	err := row.Scan(&i.UserID, &i.GuildID, &i.Sapphire)
+	return i, err
+}
+
+const upsertSunstone = `-- name: UpsertSunstone :one
+INSERT INTO gems (user_id, guild_id, sunstone)
+VALUES ($1, $2, $3)
+ON CONFLICT (user_id, guild_id)
+DO UPDATE SET sunstone = gems.sunstone + EXCLUDED.sunstone
+RETURNING user_id, guild_id, sunstone
+`
+
+type UpsertSunstoneParams struct {
+	UserID   int64
+	GuildID  int64
+	Sunstone int32
+}
+
+type UpsertSunstoneRow struct {
+	UserID   int64
+	GuildID  int64
+	Sunstone int32
+}
+
+func (q *Queries) UpsertSunstone(ctx context.Context, arg UpsertSunstoneParams) (UpsertSunstoneRow, error) {
+	row := q.db.QueryRow(ctx, upsertSunstone, arg.UserID, arg.GuildID, arg.Sunstone)
+	var i UpsertSunstoneRow
+	err := row.Scan(&i.UserID, &i.GuildID, &i.Sunstone)
+	return i, err
+}
+
+const upsertTopaz = `-- name: UpsertTopaz :one
+INSERT INTO gems (user_id, guild_id, topaz)
+VALUES ($1, $2, $3)
+ON CONFLICT (user_id, guild_id)
+DO UPDATE SET topaz = gems.topaz + EXCLUDED.topaz
+RETURNING user_id, guild_id, topaz
+`
+
+type UpsertTopazParams struct {
+	UserID  int64
+	GuildID int64
+	Topaz   int32
+}
+
+type UpsertTopazRow struct {
+	UserID  int64
+	GuildID int64
+	Topaz   int32
+}
+
+func (q *Queries) UpsertTopaz(ctx context.Context, arg UpsertTopazParams) (UpsertTopazRow, error) {
+	row := q.db.QueryRow(ctx, upsertTopaz, arg.UserID, arg.GuildID, arg.Topaz)
+	var i UpsertTopazRow
+	err := row.Scan(&i.UserID, &i.GuildID, &i.Topaz)
+	return i, err
+}
