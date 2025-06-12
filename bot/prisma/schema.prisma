@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model backup {
+  user_id    BigInt
+  guild_id   BigInt
+  diamond    Int    @default(0)
+  sunstone   Int    @default(0)
+  citrine    Int    @default(0)
+  topaz      Int    @default(0)
+  peridot    Int    @default(0)
+  jade       Int    @default(0)
+  aquamarine Int    @default(0)
+  sapphire   Int    @default(0)
+  amethyst   Int    @default(0)
+  kunzite    Int    @default(0)
+  ruby       Int    @default(0)
+  garnet     Int    @default(0)
+  painite    Int    @default(0)
+
+  @@id([user_id, guild_id])
+  @@ignore
+}
+
+model gems {
+  user_id    BigInt
+  guild_id   BigInt
+  diamond    Int    @default(0)
+  sunstone   Int    @default(0)
+  citrine    Int    @default(0)
+  topaz      Int    @default(0)
+  peridot    Int    @default(0)
+  jade       Int    @default(0)
+  aquamarine Int    @default(0)
+  sapphire   Int    @default(0)
+  amethyst   Int    @default(0)
+  kunzite    Int    @default(0)
+  ruby       Int    @default(0)
+  garnet     Int    @default(0)
+  painite    Int    @default(0)
+
+  @@id([user_id, guild_id])
+}
+
+model goose_db_version {
+  id         Int      @id @default(autoincrement())
+  version_id BigInt
+  is_applied Boolean
+  tstamp     DateTime @default(now()) @db.Timestamp(6)
+
+  @@ignore
+}

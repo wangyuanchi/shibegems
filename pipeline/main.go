@@ -63,7 +63,7 @@ func main() {
 		This performs the data migration to the "gems" table
 		An additional "backup" table is also manually created
 	*/
-	legacy.Migrate(ctx, pgq, "./pgdb/legacy/gems.json", false)
+	legacy.Migrate(ctx, pgq, "./pgdb/legacy/gems.json", true)
 
 	// Main task of this pipeline
 	sigCh := make(chan os.Signal, 1)
