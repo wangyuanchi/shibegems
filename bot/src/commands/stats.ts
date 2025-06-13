@@ -4,6 +4,8 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 
+import { calculateNetworth } from "../utils/networth";
+import { createEmbed } from "../utils/embed";
 import { getPrismaClient } from "../prisma";
 
 const command = new SlashCommandBuilder()
@@ -26,12 +28,9 @@ async function execute(interaction: ChatInputCommandInteraction) {
     } else {
       const { user_id, guild_id, ...gems } = row;
 
-      const embed = new EmbedBuilder()
-        .setColor(0x7289da)
+      const embed = createEmbed(interaction, true)
         .setTitle(`${interaction.user.username}'s Stats`)
-        .setThumbnail(interaction.user.displayAvatarURL())
-        .setFooter({ text: interaction.guild?.name! })
-        .setTimestamp();
+        .setDescription(`Networth: ${calculateNetworth(row)}`);
 
       for (const [key, value] of Object.entries(gems)) {
         embed.addFields({
