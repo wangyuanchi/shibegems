@@ -1,6 +1,7 @@
 import "dotenv/config";
 
-import { Client, GatewayIntentBits, REST, Routes } from "discord.js";
+import { REST, Routes } from "discord.js";
+import { connectDiscord, getDiscordClient } from "./discord";
 import { getPrismaClient, handlePrismaConnection } from "./prisma";
 import { getRedisClient, handleRedisConnection } from "./redis";
 
@@ -13,13 +14,8 @@ import messageCreate from "./events/messageCreate";
   await handlePrismaConnection();
 })();
 
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-  ],
-});
+connectDiscord();
+const client = getDiscordClient();
 
 client.once("ready", async () => {
   console.log(`Logged in as ${client.user?.tag}`);

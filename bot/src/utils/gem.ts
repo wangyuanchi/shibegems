@@ -75,3 +75,18 @@ export const PAINITE: Gem = {
   name: "painite",
   worth: calculateWorth(1 / 16384),
 };
+
+export type GemString =
+  | "diamond"
+  | "sunstone"
+  | "citrine"
+  | "topaz"
+  | "peridot"
+  | "jade"
+  | "aquamarine"
+  | "sapphire"
+  | "amethyst"
+  | "kunzite"
+  | "ruby"
+  | "garnet"
+  | "painite";
