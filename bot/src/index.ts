@@ -1,6 +1,7 @@
 import "dotenv/config";
 
 import { Client, GatewayIntentBits, REST, Routes } from "discord.js";
+import { getPrismaClient, handlePrismaConnection } from "./prisma";
 import { getRedisClient, handleRedisConnection } from "./redis";
 
 import commands from "./commands/commands";
@@ -9,6 +10,7 @@ import messageCreate from "./events/messageCreate";
 
 (async () => {
   await handleRedisConnection();
+  await handlePrismaConnection();
 })();
 
 const client = new Client({
@@ -55,6 +57,9 @@ async function shutdown() {
     console.log("Shutting down the Redis connection...");
     await getRedisClient().quit();
   }
+
+  await getPrismaClient().$disconnect(); // No logging message
+
   if (client.isReady()) {
     console.log("Shutting down the Discord client...");
     client.destroy();
