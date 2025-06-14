@@ -45,12 +45,11 @@ const command = new SlashCommandBuilder()
 async function execute(interaction: ChatInputCommandInteraction) {
   await interaction.deferReply();
   const sub = interaction.options.getSubcommand();
+  try {
+    if (sub === "gem") {
+      const type = interaction.options.getString("type", true) as GemName;
 
-  if (sub === "gem") {
-    const type = interaction.options.getString("type", true) as GemName;
-
-    try {
-      const rows = await getPrismaClient().gems.findMany({
+      const gemsRows = await getPrismaClient().gems.findMany({
         where: {
           guild_id: BigInt(interaction.guildId!),
           [type]: { gt: 0 },
@@ -61,7 +60,7 @@ async function execute(interaction: ChatInputCommandInteraction) {
         take: 10,
       });
 
-      if (rows.length === 0) {
+      if (gemsRows.length === 0) {
         await interaction.editReply("This leaderboard is currently empty!");
         return;
       }
@@ -71,23 +70,52 @@ async function execute(interaction: ChatInputCommandInteraction) {
       );
 
       const fields: APIEmbedField[] = await Promise.all(
-        rows.map(async (row, i) => ({
-          name: `#${i + 1} ${await fetchDiscordUsername(row.user_id)}`,
-          value: `${row[type]}`,
+        gemsRows.map(async (gemsRow, i) => ({
+          name: `#${i + 1} ${await fetchDiscordUsername(gemsRow.user_id)}`,
+          value: `${gemsRow[type]}`,
           inline: true,
         }))
       );
 
       embed.addFields(fields);
       await interaction.editReply({ embeds: [embed] });
-    } catch (err) {
-      console.error(err);
-      await interaction.editReply({
-        content: "An unexpected error occurred. Please try again later.",
+    } else if (sub === "networth") {
+      const profileRows = await getPrismaClient().profile.findMany({
+        where: {
+          guild_id: BigInt(interaction.guildId!),
+          networth: { gt: 0 },
+        },
+        orderBy: {
+          networth: "desc",
+        },
+        take: 10,
       });
+
+      if (profileRows.length === 0) {
+        await interaction.editReply("This leaderboard is currently empty!");
+        return;
+      }
+
+      const embed = createEmbed(interaction, false).setTitle(
+        "Networth Leaderboard"
+      );
+
+      const fields: APIEmbedField[] = await Promise.all(
+        profileRows.map(async (profileRow, i) => ({
+          name: `#${i + 1} ${await fetchDiscordUsername(profileRow.user_id)}`,
+          value: `${profileRow.networth}`,
+          inline: true,
+        }))
+      );
+
+      embed.addFields(fields);
+      await interaction.editReply({ embeds: [embed] });
     }
-  } else if (sub === "networth") {
-    await interaction.editReply("Coming Soon!");
+  } catch (err) {
+    console.error(err);
+    await interaction.editReply({
+      content: "An unexpected error occurred. Please try again later.",
+    });
   }
 }
 
