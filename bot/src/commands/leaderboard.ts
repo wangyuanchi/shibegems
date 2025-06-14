@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 
-import { GemString } from "../utils/gem";
+import { GemName } from "../utils/gem";
 import { createEmbed } from "../utils/embed";
 import { getDiscordClient } from "../discord";
 import { getPrismaClient } from "../prisma";
@@ -42,7 +42,7 @@ async function execute(interaction: ChatInputCommandInteraction) {
   const sub = interaction.options.getSubcommand();
 
   if (sub === "gem") {
-    const type = interaction.options.getString("type", true) as GemString;
+    const type = interaction.options.getString("type", true) as GemName;
 
     try {
       const rows = await getPrismaClient().gems.findMany({
@@ -59,20 +59,16 @@ async function execute(interaction: ChatInputCommandInteraction) {
       if (rows.length === 0) {
         await interaction.reply("This leaderboard is currently empty!");
       } else {
-        const topTenArray = rows.map((row) => ({
-          user_id: row.user_id,
-          [type]: row[type],
-        }));
         const embed = createEmbed(interaction, false).setTitle(
           `${type.charAt(0).toUpperCase() + type.slice(1)} Leaderboard`
         );
 
-        topTenArray.forEach((element, i) => {
+        rows.forEach((row, i) => {
           embed.addFields({
             name: `#${i + 1} ${getDiscordClient().users.cache.get(
-              element.user_id.toString()
+              row.user_id.toString()
             )}`,
-            value: `${element[type]}`,
+            value: `${row[type]}`,
           });
         });
 

@@ -15,10 +15,10 @@ import messageCreate from "./events/messageCreate";
 })();
 
 connectDiscord();
-const client = getDiscordClient();
+const discordClient = getDiscordClient();
 
-client.once("ready", async () => {
-  console.log(`Logged in as ${client.user?.tag}`);
+discordClient.once("ready", async () => {
+  console.log(`Logged in as ${discordClient.user?.tag}`);
 
   if (!process.env.CLIENT_ID || !process.env.GUILD_ID || !process.env.TOKEN) {
     console.error(
@@ -45,8 +45,8 @@ client.once("ready", async () => {
   }
 });
 
-client.on("interactionCreate", interactionCreate);
-client.on("messageCreate", messageCreate);
+discordClient.on("interactionCreate", interactionCreate);
+discordClient.on("messageCreate", messageCreate);
 
 async function shutdown() {
   if (getRedisClient()?.isOpen) {
@@ -56,9 +56,9 @@ async function shutdown() {
 
   await getPrismaClient().$disconnect(); // No logging message
 
-  if (client.isReady()) {
+  if (discordClient.isReady()) {
     console.log("Shutting down the Discord client...");
-    client.destroy();
+    discordClient.destroy();
   }
 }
 
@@ -70,4 +70,4 @@ if (!process.env.TOKEN) {
   process.exit(1);
 }
 
-client.login(process.env.TOKEN);
+discordClient.login(process.env.TOKEN);

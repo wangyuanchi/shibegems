@@ -41,10 +41,10 @@ func main() {
 	defer cancel()
 
 	// Connect to Redis client
-	client := redis.NewClient(opt)
-	defer client.Close()
+	redisClient := redis.NewClient(opt)
+	defer redisClient.Close()
 
-	_, err = client.Ping(ctx).Result()
+	_, err = redisClient.Ping(ctx).Result()
 	if err != nil {
 		log.Fatalf("Error pinging Redis client: %v", err)
 	}
@@ -72,17 +72,17 @@ func main() {
 	var wg sync.WaitGroup
 	streamName := "messageStream"
 	consumerGroupName := "messageStreamConsumerGroup"
-	rdb.CreateConsumerGroup(ctx, client, streamName, consumerGroupName)
+	rdb.CreateConsumerGroup(ctx, redisClient, streamName, consumerGroupName)
 
 	wg.Add(1)
 	log.Printf("[reclaimer] Starting...")
-	go rdb.RunReclaimer(&wg, ctx, pgq, client, streamName, consumerGroupName, "reclaimer")
+	go rdb.RunReclaimer(&wg, ctx, pgq, redisClient, streamName, consumerGroupName, "reclaimer")
 
 	for i := 1; i <= 2; i++ {
 		consumerName := "consumer-" + strconv.Itoa(i)
 		wg.Add(1)
 		log.Printf("[%v] Starting...", consumerName)
-		go rdb.RunConsumer(&wg, ctx, pgq, client, streamName, consumerGroupName, consumerName)
+		go rdb.RunConsumer(&wg, ctx, pgq, redisClient, streamName, consumerGroupName, consumerName)
 	}
 
 	<-sigCh

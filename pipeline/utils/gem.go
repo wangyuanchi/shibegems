@@ -14,34 +14,34 @@ type Gem struct {
 
 // Total: 0.499887011
 var (
-	Diamond    = Gem{Name: "diamond", Chance: 1.0 / 4}
-	Sunstone   = Gem{Name: "sunstone", Chance: 1.0 / 8}
-	Citrine    = Gem{Name: "citrine", Chance: 1.0 / 16}
-	Topaz      = Gem{Name: "topaz", Chance: 1.0 / 32}
-	Peridot    = Gem{Name: "peridot", Chance: 1.0 / 64}
-	Jade       = Gem{Name: "jade", Chance: 1.0 / 128}
-	Aquamarine = Gem{Name: "aquamarine", Chance: 1.0 / 256}
-	Sapphire   = Gem{Name: "sapphire", Chance: 1.0 / 512}
-	Amethyst   = Gem{Name: "amethyst", Chance: 1.0 / 1024}
-	Kunzite    = Gem{Name: "kunzite", Chance: 1.0 / 2048}
-	Ruby       = Gem{Name: "ruby", Chance: 1.0 / 4096}
-	Garnet     = Gem{Name: "garnet", Chance: 1.0 / 8192}
-	Painite    = Gem{Name: "painite", Chance: 1.0 / 100000}
+	DIAMOND    = Gem{Name: "diamond", Chance: 1.0 / 4}
+	SUNSTONE   = Gem{Name: "sunstone", Chance: 1.0 / 8}
+	CITRINE    = Gem{Name: "citrine", Chance: 1.0 / 16}
+	TOPAZ      = Gem{Name: "topaz", Chance: 1.0 / 32}
+	PERIDOT    = Gem{Name: "peridot", Chance: 1.0 / 64}
+	JADE       = Gem{Name: "jade", Chance: 1.0 / 128}
+	AQUAMARINE = Gem{Name: "aquamarine", Chance: 1.0 / 256}
+	SAPPHIRE   = Gem{Name: "sapphire", Chance: 1.0 / 512}
+	AMETHYST   = Gem{Name: "amethyst", Chance: 1.0 / 1024}
+	KUNZITE    = Gem{Name: "kunzite", Chance: 1.0 / 2048}
+	RUBY       = Gem{Name: "ruby", Chance: 1.0 / 4096}
+	GARNET     = Gem{Name: "garnet", Chance: 1.0 / 8192}
+	PAINITE    = Gem{Name: "painite", Chance: 1.0 / 100000}
 
-	Gems = []Gem{
-		Diamond,
-		Sunstone,
-		Citrine,
-		Topaz,
-		Peridot,
-		Jade,
-		Aquamarine,
-		Sapphire,
-		Amethyst,
-		Kunzite,
-		Ruby,
-		Garnet,
-		Painite,
+	GEMS = []Gem{
+		DIAMOND,
+		SUNSTONE,
+		CITRINE,
+		TOPAZ,
+		PERIDOT,
+		JADE,
+		AQUAMARINE,
+		SAPPHIRE,
+		AMETHYST,
+		KUNZITE,
+		RUBY,
+		GARNET,
+		PAINITE,
 	}
 )
 
