@@ -1,8 +1,12 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
+import {
+  APIEmbedField,
+  ChatInputCommandInteraction,
+  SlashCommandBuilder,
+} from "discord.js";
 
 import { GemName } from "../utils/gem";
 import { createEmbed } from "../utils/embed";
-import { getDiscordClient } from "../discord";
+import { fetchDiscordUsername } from "../utils/username";
 import { getPrismaClient } from "../prisma";
 
 const command = new SlashCommandBuilder()
@@ -39,6 +43,7 @@ const command = new SlashCommandBuilder()
   );
 
 async function execute(interaction: ChatInputCommandInteraction) {
+  await interaction.deferReply();
   const sub = interaction.options.getSubcommand();
 
   if (sub === "gem") {
@@ -57,34 +62,31 @@ async function execute(interaction: ChatInputCommandInteraction) {
       });
 
       if (rows.length === 0) {
-        await interaction.reply("This leaderboard is currently empty!");
+        await interaction.editReply("This leaderboard is currently empty!");
       } else {
         const embed = createEmbed(interaction, false).setTitle(
           `${type.charAt(0).toUpperCase() + type.slice(1)} Leaderboard`
         );
 
-        rows.forEach((row, i) => {
-          embed.addFields({
-            name: `#${i + 1} ${getDiscordClient().users.cache.get(
-              row.user_id.toString()
-            )}`,
+        const fields: APIEmbedField[] = await Promise.all(
+          rows.map(async (row, i) => ({
+            name: `#${i + 1} ${await fetchDiscordUsername(row.user_id)}`,
             value: `${row[type]}`,
-          });
-        });
+            inline: true,
+          }))
+        );
 
-        await interaction.reply({
-          embeds: [embed],
-        });
+        embed.addFields(fields);
+        await interaction.editReply({ embeds: [embed] });
       }
     } catch (err) {
       console.error(err);
-      await interaction.reply({
+      await interaction.editReply({
         content: "An unexpected error occurred. Please try again later.",
-        ephemeral: true,
       });
     }
   } else if (sub === "networth") {
-    await interaction.reply("Coming Soon!");
+    await interaction.editReply("Coming Soon!");
   }
 }
 

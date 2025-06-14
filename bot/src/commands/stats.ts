@@ -42,7 +42,6 @@ async function execute(interaction: ChatInputCommandInteraction) {
     console.error(err);
     await interaction.reply({
       content: "An unexpected error occurred. Please try again later.",
-      ephemeral: true,
     });
   }
 }
