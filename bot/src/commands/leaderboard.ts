@@ -63,22 +63,23 @@ async function execute(interaction: ChatInputCommandInteraction) {
 
       if (rows.length === 0) {
         await interaction.editReply("This leaderboard is currently empty!");
-      } else {
-        const embed = createEmbed(interaction, false).setTitle(
-          `${type.charAt(0).toUpperCase() + type.slice(1)} Leaderboard`
-        );
-
-        const fields: APIEmbedField[] = await Promise.all(
-          rows.map(async (row, i) => ({
-            name: `#${i + 1} ${await fetchDiscordUsername(row.user_id)}`,
-            value: `${row[type]}`,
-            inline: true,
-          }))
-        );
-
-        embed.addFields(fields);
-        await interaction.editReply({ embeds: [embed] });
+        return;
       }
+
+      const embed = createEmbed(interaction, false).setTitle(
+        `${type.charAt(0).toUpperCase() + type.slice(1)} Leaderboard`
+      );
+
+      const fields: APIEmbedField[] = await Promise.all(
+        rows.map(async (row, i) => ({
+          name: `#${i + 1} ${await fetchDiscordUsername(row.user_id)}`,
+          value: `${row[type]}`,
+          inline: true,
+        }))
+      );
+
+      embed.addFields(fields);
+      await interaction.editReply({ embeds: [embed] });
     } catch (err) {
       console.error(err);
       await interaction.editReply({

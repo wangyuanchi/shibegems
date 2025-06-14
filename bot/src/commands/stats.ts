@@ -1,6 +1,5 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 
-import { calculateNetworth } from "../utils/networth";
 import { createEmbed } from "../utils/embed";
 import { getPrismaClient } from "../prisma";
 
@@ -9,8 +8,10 @@ const command = new SlashCommandBuilder()
   .setDescription("Shows the number of gems you have found.");
 
 async function execute(interaction: ChatInputCommandInteraction) {
+  await interaction.deferReply();
+
   try {
-    const row = await getPrismaClient().gems.findUnique({
+    const gemsRow = await getPrismaClient().gems.findUnique({
       where: {
         user_id_guild_id: {
           user_id: BigInt(interaction.user.id),
@@ -19,28 +20,43 @@ async function execute(interaction: ChatInputCommandInteraction) {
       },
     });
 
-    if (!row) {
-      await interaction.reply("You do not have any gems.");
-    } else {
-      const { user_id, guild_id, ...gems } = row;
-
-      const embed = createEmbed(interaction, true)
-        .setTitle(`${interaction.user.username}'s Stats`)
-        .setDescription(`Networth: ${calculateNetworth(row)}`);
-
-      for (const [key, value] of Object.entries(gems)) {
-        embed.addFields({
-          name: key.charAt(0).toUpperCase() + key.slice(1),
-          value: value.toString(),
-          inline: true,
-        });
-      }
-
-      await interaction.reply({ embeds: [embed] });
+    if (!gemsRow) {
+      await interaction.editReply("You do not have any gems.");
+      return;
     }
+
+    const profileRow = await getPrismaClient().profile.findUnique({
+      where: {
+        user_id_guild_id: {
+          user_id: BigInt(interaction.user.id),
+          guild_id: BigInt(interaction.guildId!),
+        },
+      },
+    });
+
+    if (!profileRow) {
+      throw new Error("Profile not found even though user is in 'gems' table.");
+    }
+
+    const { user_id, guild_id, ...gems } = gemsRow;
+    const { networth } = profileRow;
+
+    const embed = createEmbed(interaction, true)
+      .setTitle(`${interaction.user.username}'s Stats`)
+      .setDescription(`Networth: ${networth}`);
+
+    for (const [key, value] of Object.entries(gems)) {
+      embed.addFields({
+        name: key.charAt(0).toUpperCase() + key.slice(1),
+        value: value.toString(),
+        inline: true,
+      });
+    }
+
+    await interaction.editReply({ embeds: [embed] });
   } catch (err) {
     console.error(err);
-    await interaction.reply({
+    await interaction.editReply({
       content: "An unexpected error occurred. Please try again later.",
     });
   }

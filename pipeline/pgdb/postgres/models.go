@@ -21,3 +21,22 @@ type Gem struct {
 	Garnet     int32
 	Painite    int32
 }
+
+type Profile struct {
+	UserID               int64
+	GuildID              int64
+	Networth             int32
+	DiamondMultiplier    float64
+	SunstoneMultiplier   float64
+	CitrineMultiplier    float64
+	TopazMultiplier      float64
+	PeridotMultiplier    float64
+	JadeMultiplier       float64
+	AquamarineMultiplier float64
+	SapphireMultiplier   float64
+	AmethystMultiplier   float64
+	KunziteMultiplier    float64
+	RubyMultiplier       float64
+	GarnetMultiplier     float64
+	PainiteMultiplier    float64
+}

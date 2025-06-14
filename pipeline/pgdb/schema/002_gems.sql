@@ -16,7 +16,8 @@ CREATE TABLE gems (
     ruby INTEGER NOT NULL DEFAULT 0,
     garnet INTEGER NOT NULL DEFAULT 0,
     painite INTEGER NOT NULL DEFAULT 0,
-    PRIMARY KEY (user_id, guild_id)
+    PRIMARY KEY (user_id, guild_id),
+    FOREIGN KEY (user_id, guild_id) REFERENCES profile(user_id, guild_id) ON DELETE CASCADE
 );
 
 -- +goose Down

@@ -93,9 +93,32 @@ func processAcknowledgeDelete(ctx context.Context, pgq *postgres.Queries, client
 		guildID, _ := strconv.ParseInt(messageEntry["guildID"].(string), 10, 64)
 		authorID, _ := strconv.ParseInt(messageEntry["authorID"].(string), 10, 64)
 
-		gem := utils.RollRNG()
+		err := pgq.CreateProfile(ctx, postgres.CreateProfileParams{
+			UserID:  authorID,
+			GuildID: guildID,
+		})
+		if err != nil {
+			log.Printf("[%v] Failed to create profile: %v", consumerName, err)
+			continue // Left in pending entries list
+		}
+
+		err = pgq.CreateGems(ctx, postgres.CreateGemsParams{
+			UserID:  authorID,
+			GuildID: guildID,
+		})
+		if err != nil {
+			log.Printf("[%v] Failed to create gems: %v", consumerName, err)
+			continue // Left in pending entries list
+		}
+
+		gem, err := utils.RollRNG(ctx, pgq, authorID, guildID)
+		if err != nil {
+			log.Printf("[%v] Failed to roll RNG: %v", consumerName, err)
+			continue // Left in pending entries list
+		}
+
 		if gem != nil {
-			err := utils.UpsertGem(ctx, pgq, authorID, guildID, gem.Name, 1)
+			err := utils.UpdateGemAndNetworth(ctx, pgq, authorID, guildID, gem.Name, 1)
 			if err != nil {
 				log.Printf("[%v] Failed to upsert gem: %v", consumerName, err)
 				continue // Left in pending entries list
@@ -103,7 +126,7 @@ func processAcknowledgeDelete(ctx context.Context, pgq *postgres.Queries, client
 			log.Printf("[%v] %v found a %v!", consumerName, authorID, gem.Name)
 		}
 
-		err := client.XAck(ctx, streamName, consumerGroupName, message.ID).Err()
+		err = client.XAck(ctx, streamName, consumerGroupName, message.ID).Err()
 		if err != nil {
 			log.Printf("[%v] Failed to acknowledge message entry %v: %v", consumerName, message.ID, err)
 			continue

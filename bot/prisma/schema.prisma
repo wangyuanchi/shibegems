@@ -8,43 +8,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model backup {
-  user_id    BigInt
-  guild_id   BigInt
-  diamond    Int    @default(0)
-  sunstone   Int    @default(0)
-  citrine    Int    @default(0)
-  topaz      Int    @default(0)
-  peridot    Int    @default(0)
-  jade       Int    @default(0)
-  aquamarine Int    @default(0)
-  sapphire   Int    @default(0)
-  amethyst   Int    @default(0)
-  kunzite    Int    @default(0)
-  ruby       Int    @default(0)
-  garnet     Int    @default(0)
-  painite    Int    @default(0)
-
-  @@id([user_id, guild_id])
-  @@ignore
-}
-
 model gems {
   user_id    BigInt
   guild_id   BigInt
-  diamond    Int    @default(0)
-  sunstone   Int    @default(0)
-  citrine    Int    @default(0)
-  topaz      Int    @default(0)
-  peridot    Int    @default(0)
-  jade       Int    @default(0)
-  aquamarine Int    @default(0)
-  sapphire   Int    @default(0)
-  amethyst   Int    @default(0)
-  kunzite    Int    @default(0)
-  ruby       Int    @default(0)
-  garnet     Int    @default(0)
-  painite    Int    @default(0)
+  diamond    Int     @default(0)
+  sunstone   Int     @default(0)
+  citrine    Int     @default(0)
+  topaz      Int     @default(0)
+  peridot    Int     @default(0)
+  jade       Int     @default(0)
+  aquamarine Int     @default(0)
+  sapphire   Int     @default(0)
+  amethyst   Int     @default(0)
+  kunzite    Int     @default(0)
+  ruby       Int     @default(0)
+  garnet     Int     @default(0)
+  painite    Int     @default(0)
+  profile    profile @relation(fields: [user_id, guild_id], references: [user_id, guild_id], onDelete: Cascade, onUpdate: NoAction)
 
   @@id([user_id, guild_id])
 }
@@ -56,4 +36,26 @@ model goose_db_version {
   tstamp     DateTime @default(now()) @db.Timestamp(6)
 
   @@ignore
+}
+
+model profile {
+  user_id               BigInt
+  guild_id              BigInt
+  networth              Int    @default(0)
+  diamond_multiplier    Float  @default(1.000)
+  sunstone_multiplier   Float  @default(1.000)
+  citrine_multiplier    Float  @default(1.000)
+  topaz_multiplier      Float  @default(1.000)
+  peridot_multiplier    Float  @default(1.000)
+  jade_multiplier       Float  @default(1.000)
+  aquamarine_multiplier Float  @default(1.000)
+  sapphire_multiplier   Float  @default(1.000)
+  amethyst_multiplier   Float  @default(1.000)
+  kunzite_multiplier    Float  @default(1.000)
+  ruby_multiplier       Float  @default(1.000)
+  garnet_multiplier     Float  @default(1.000)
+  painite_multiplier    Float  @default(1.000)
+  gems                  gems?
+
+  @@id([user_id, guild_id])
 }
