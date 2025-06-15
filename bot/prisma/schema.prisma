@@ -56,6 +56,16 @@ model profile {
   garnet_multiplier     Float  @default(1.000)
   painite_multiplier    Float  @default(1.000)
   gems                  gems?
+  items                 items?
+
+  @@id([user_id, guild_id])
+}
+
+model items {
+  user_id  BigInt
+  guild_id BigInt
+  item     String
+  profile  profile @relation(fields: [user_id, guild_id], references: [user_id, guild_id], onDelete: Cascade, onUpdate: NoAction)
 
   @@id([user_id, guild_id])
 }

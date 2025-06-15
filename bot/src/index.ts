@@ -1,9 +1,9 @@
 import "dotenv/config";
 
 import { REST, Routes } from "discord.js";
-import { connectDiscord, getDiscordClient } from "./discord";
-import { getPrismaClient, handlePrismaConnection } from "./prisma";
-import { getRedisClient, handleRedisConnection } from "./redis";
+import { connectDiscord, getDiscordClient } from "./clients/discord";
+import { getPrismaClient, handlePrismaConnection } from "./clients/prisma";
+import { getRedisClient, handleRedisConnection } from "./clients/redis";
 
 import commands from "./commands/commands";
 import interactionCreate from "./events/interactionCreate";

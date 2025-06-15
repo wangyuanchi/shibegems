@@ -1,7 +1,8 @@
 import { Interaction } from "discord.js";
+import { buyExecute } from "../commands/buy";
 import { leaderboardExecute } from "../commands/leaderboard";
 import { pingExecute } from "../commands/ping";
-import { statsExecute } from "../commands/stats";
+import { profileExecute } from "../commands/profile";
 
 export default async (interaction: Interaction) => {
   if (!interaction.isChatInputCommand()) return;
@@ -11,11 +12,14 @@ export default async (interaction: Interaction) => {
       case "ping":
         await pingExecute(interaction);
         break;
-      case "stats":
-        await statsExecute(interaction);
+      case "profile":
+        await profileExecute(interaction);
         break;
       case "leaderboard":
         await leaderboardExecute(interaction);
+        break;
+      case "buy":
+        await buyExecute(interaction);
         break;
     }
   } catch (error) {

@@ -1,6 +1,6 @@
 import "dotenv/config";
 
-import { PrismaClient } from "./generated/prisma";
+import { PrismaClient } from "../generated/prisma";
 
 let client: PrismaClient | null = null;
 

@@ -1,6 +1,6 @@
 import { GuildTextBasedChannel, Message } from "discord.js";
 
-import { getRedisClient } from "../redis";
+import { getRedisClient } from "../clients/redis";
 
 export default async (message: Message) => {
   if (message.author.id === message.client.user?.id || !message.guild) {

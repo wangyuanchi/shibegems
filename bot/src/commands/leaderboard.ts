@@ -4,10 +4,10 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 
-import { GemName } from "../utils/gem";
+import { GemName } from "../utils/gems";
 import { createEmbed } from "../utils/embed";
 import { fetchDiscordUsername } from "../utils/username";
-import { getPrismaClient } from "../prisma";
+import { getPrismaClient } from "../clients/prisma";
 
 const command = new SlashCommandBuilder()
   .setName("leaderboard")
@@ -113,9 +113,9 @@ async function execute(interaction: ChatInputCommandInteraction) {
     }
   } catch (err) {
     console.error(err);
-    await interaction.editReply({
-      content: "An unexpected error occurred. Please try again later.",
-    });
+    await interaction.editReply(
+      "An unexpected error occurred. Please try again later."
+    );
   }
 }
 

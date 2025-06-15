@@ -1,4 +1,4 @@
-import { getDiscordClient } from "../discord";
+import { getDiscordClient } from "../clients/discord";
 
 export async function fetchDiscordUsername(user_id: bigint): Promise<string> {
   const userID = user_id.toString();

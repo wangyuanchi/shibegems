@@ -1,11 +1,13 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 
 import { createEmbed } from "../utils/embed";
-import { getPrismaClient } from "../prisma";
+import { getPrismaClient } from "../clients/prisma";
 
 const command = new SlashCommandBuilder()
-  .setName("stats")
-  .setDescription("Shows the number of gems you have found.");
+  .setName("profile")
+  .setDescription(
+    "Shows the number of gems you have found and the items you have."
+  );
 
 async function execute(interaction: ChatInputCommandInteraction) {
   await interaction.deferReply();
@@ -34,15 +36,11 @@ async function execute(interaction: ChatInputCommandInteraction) {
       },
     });
 
-    if (!profileRow) {
-      throw new Error("Profile not found even though user is in 'gems' table.");
-    }
-
     const { user_id, guild_id, ...gems } = gemsRow;
-    const { networth } = profileRow;
+    const { networth } = profileRow!;
 
     const embed = createEmbed(interaction, true)
-      .setTitle(`${interaction.user.username}'s Stats`)
+      .setTitle(`${interaction.user.username}'s Profile`)
       .setDescription(`Networth: ${networth}`);
 
     for (const [key, value] of Object.entries(gems)) {
@@ -56,10 +54,10 @@ async function execute(interaction: ChatInputCommandInteraction) {
     await interaction.editReply({ embeds: [embed] });
   } catch (err) {
     console.error(err);
-    await interaction.editReply({
-      content: "An unexpected error occurred. Please try again later.",
-    });
+    await interaction.editReply(
+      "An unexpected error occurred. Please try again later."
+    );
   }
 }
 
-export { command as statsCommand, execute as statsExecute };
+export { command as profileCommand, execute as profileExecute };
