@@ -92,7 +92,5 @@ export function updatedProfileAfterBuyingItem(
   updatedProfile["networth"] =
     profile["networth"] - truncate(0.1 * itemCostToNetworth(item));
 
-  console.log(0.1 * itemCostToNetworth(item));
-
   return updatedProfile;
 }

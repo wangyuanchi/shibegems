@@ -120,7 +120,7 @@ func processAcknowledgeDelete(ctx context.Context, pgq *postgres.Queries, client
 		if gem != nil {
 			err := utils.UpdateGemAndNetworth(ctx, pgq, authorID, guildID, gem.Name, 1)
 			if err != nil {
-				log.Printf("[%v] Failed to upsert gem: %v", consumerName, err)
+				log.Printf("[%v] Failed to update gem and networth: %v", consumerName, err)
 				continue // Left in pending entries list
 			}
 			log.Printf("[%v] %v found a %v!", consumerName, authorID, gem.Name)

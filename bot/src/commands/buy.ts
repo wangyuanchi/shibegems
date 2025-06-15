@@ -25,12 +25,13 @@ async function execute(interaction: ChatInputCommandInteraction) {
     const item = interaction.options.getString("item", true) as ItemName;
 
     // Check if item already exists
-    // As of now, all items are unique and is not enforced in schema
-    const exist = await getPrismaClient().items.findFirst({
+    const exist = await getPrismaClient().items.findUnique({
       where: {
-        user_id: BigInt(interaction.user.id),
-        guild_id: BigInt(interaction.guildId!),
-        item: item,
+        user_id_guild_id_item: {
+          user_id: BigInt(interaction.user.id),
+          guild_id: BigInt(interaction.guildId!),
+          item: item,
+        },
       },
     });
 

@@ -41,22 +41,22 @@ model goose_db_version {
 model profile {
   user_id               BigInt
   guild_id              BigInt
-  networth              Int    @default(0)
-  diamond_multiplier    Float  @default(1.000)
-  sunstone_multiplier   Float  @default(1.000)
-  citrine_multiplier    Float  @default(1.000)
-  topaz_multiplier      Float  @default(1.000)
-  peridot_multiplier    Float  @default(1.000)
-  jade_multiplier       Float  @default(1.000)
-  aquamarine_multiplier Float  @default(1.000)
-  sapphire_multiplier   Float  @default(1.000)
-  amethyst_multiplier   Float  @default(1.000)
-  kunzite_multiplier    Float  @default(1.000)
-  ruby_multiplier       Float  @default(1.000)
-  garnet_multiplier     Float  @default(1.000)
-  painite_multiplier    Float  @default(1.000)
+  networth              Int     @default(0)
+  diamond_multiplier    Float   @default(1.000)
+  sunstone_multiplier   Float   @default(1.000)
+  citrine_multiplier    Float   @default(1.000)
+  topaz_multiplier      Float   @default(1.000)
+  peridot_multiplier    Float   @default(1.000)
+  jade_multiplier       Float   @default(1.000)
+  aquamarine_multiplier Float   @default(1.000)
+  sapphire_multiplier   Float   @default(1.000)
+  amethyst_multiplier   Float   @default(1.000)
+  kunzite_multiplier    Float   @default(1.000)
+  ruby_multiplier       Float   @default(1.000)
+  garnet_multiplier     Float   @default(1.000)
+  painite_multiplier    Float   @default(1.000)
   gems                  gems?
-  items                 items?
+  items                 items[]
 
   @@id([user_id, guild_id])
 }
@@ -67,5 +67,5 @@ model items {
   item     String
   profile  profile @relation(fields: [user_id, guild_id], references: [user_id, guild_id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@id([user_id, guild_id])
+  @@id([user_id, guild_id, item])
 }
