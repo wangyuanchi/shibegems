@@ -6,7 +6,7 @@ import { getPrismaClient } from "../clients/prisma";
 const command = new SlashCommandBuilder()
   .setName("profile")
   .setDescription(
-    "Shows the number of gems you have found and the items you have."
+    "Shows the number of gems you have found and all the items you own."
   );
 
 async function execute(interaction: ChatInputCommandInteraction) {
@@ -28,20 +28,22 @@ async function execute(interaction: ChatInputCommandInteraction) {
 
     if (!profileWithGemsAndItems) {
       await interaction.editReply(
-        "You do not have a profile, send a message in any channel to create one automatically."
+        "⚠️  You do not have a profile. Send a message in any channel to create one automatically."
       );
       return;
     }
 
     const { user_id, guild_id, ...gems } = profileWithGemsAndItems.gems!;
     const { networth } = profileWithGemsAndItems;
-    const items = profileWithGemsAndItems.items.map((element) => element.item);
+    const items = profileWithGemsAndItems.items.map(
+      (element) => `\`\`${element.item}\`\``
+    );
 
-    let description = `Networth: ${networth}`;
+    let description = `Networth: ${networth.toLocaleString()}`;
 
     if (items.length > 0) {
-      description += "\nItems:\n";
-      description += items.join("\n");
+      description += "\nItems: ";
+      description += items.join(" ");
     }
 
     const embed = createEmbed(interaction, true)
@@ -60,7 +62,7 @@ async function execute(interaction: ChatInputCommandInteraction) {
   } catch (err) {
     console.error(err);
     await interaction.editReply(
-      "An unexpected error occurred. Please try again later."
+      "🛑  An unexpected error occurred. Please try again later."
     );
   }
 }

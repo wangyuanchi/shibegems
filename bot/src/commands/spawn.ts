@@ -40,7 +40,7 @@ async function execute(interaction: ChatInputCommandInteraction) {
   try {
     if (interaction.user.id !== "1378309602759807017") {
       await interaction.editReply(
-        "You do not have permission to use this admin command!"
+        "❌  You do not have permission to use this admin command."
       );
     }
 
@@ -55,7 +55,7 @@ async function execute(interaction: ChatInputCommandInteraction) {
 
     if (!profileRow) {
       await interaction.editReply(
-        "You do not have a profile, send a message in any channel to create one automatically."
+        "⚠️  You do not have a profile, send a message in any channel to create one automatically."
       );
       return;
     }
@@ -88,11 +88,11 @@ async function execute(interaction: ChatInputCommandInteraction) {
       }),
     ]);
 
-    await interaction.editReply(`Successfully added ${count} ${type}.`);
+    await interaction.editReply(`✅  Successfully added ${count} ${type}!`);
   } catch (err) {
     console.error(err);
     await interaction.editReply(
-      "An unexpected error occurred. Please try again later."
+      "🛑  An unexpected error occurred. Please try again later."
     );
   }
 }

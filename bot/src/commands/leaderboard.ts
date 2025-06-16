@@ -5,6 +5,7 @@ import {
 } from "discord.js";
 
 import { GemName } from "../utils/gems";
+import { convertToTrophy } from "../utils/trophy";
 import { createEmbed } from "../utils/embed";
 import { fetchDiscordUsername } from "../utils/username";
 import { getPrismaClient } from "../clients/prisma";
@@ -61,7 +62,7 @@ async function execute(interaction: ChatInputCommandInteraction) {
       });
 
       if (gemsRows.length === 0) {
-        await interaction.editReply("This leaderboard is currently empty!");
+        await interaction.editReply("👀  This leaderboard is currently empty.");
         return;
       }
 
@@ -71,8 +72,10 @@ async function execute(interaction: ChatInputCommandInteraction) {
 
       const fields: APIEmbedField[] = await Promise.all(
         gemsRows.map(async (gemsRow, i) => ({
-          name: `#${i + 1} ${await fetchDiscordUsername(gemsRow.user_id)}`,
-          value: `${gemsRow[type]}`,
+          name: `${convertToTrophy(`#${i + 1}`)} ${await fetchDiscordUsername(
+            gemsRow.user_id
+          )}`,
+          value: gemsRow[type].toLocaleString(),
           inline: true,
         }))
       );
@@ -92,7 +95,7 @@ async function execute(interaction: ChatInputCommandInteraction) {
       });
 
       if (profileRows.length === 0) {
-        await interaction.editReply("This leaderboard is currently empty!");
+        await interaction.editReply("👀  This leaderboard is currently empty.");
         return;
       }
 
@@ -102,8 +105,10 @@ async function execute(interaction: ChatInputCommandInteraction) {
 
       const fields: APIEmbedField[] = await Promise.all(
         profileRows.map(async (profileRow, i) => ({
-          name: `#${i + 1} ${await fetchDiscordUsername(profileRow.user_id)}`,
-          value: `${profileRow.networth}`,
+          name: `${convertToTrophy(`#${i + 1}`)} ${await fetchDiscordUsername(
+            profileRow.user_id
+          )}`,
+          value: profileRow.networth.toLocaleString(),
           inline: true,
         }))
       );
@@ -114,7 +119,7 @@ async function execute(interaction: ChatInputCommandInteraction) {
   } catch (err) {
     console.error(err);
     await interaction.editReply(
-      "An unexpected error occurred. Please try again later."
+      "🛑  An unexpected error occurred. Please try again later."
     );
   }
 }

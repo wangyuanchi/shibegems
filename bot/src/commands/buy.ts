@@ -36,7 +36,7 @@ async function execute(interaction: ChatInputCommandInteraction) {
     });
 
     if (exist) {
-      await interaction.editReply("You already have this item.");
+      await interaction.editReply("⚠️  You already have this item.");
       return;
     }
 
@@ -51,7 +51,7 @@ async function execute(interaction: ChatInputCommandInteraction) {
     });
 
     if (!affordable(gemsRow, item)) {
-      await interaction.editReply("You cannot afford this item.");
+      await interaction.editReply("❌  You cannot afford this item.");
       return;
     }
 
@@ -101,11 +101,11 @@ async function execute(interaction: ChatInputCommandInteraction) {
       }),
     ]);
 
-    await interaction.editReply(`Successfully bought ${item}!`);
+    await interaction.editReply(`✅  Successfully bought \`\`${item}\`\`!`);
   } catch (err) {
     console.error(err);
     await interaction.editReply(
-      "An unexpected error occurred. Please try again later."
+      "🛑  An unexpected error occurred. Please try again later."
     );
   }
 }
