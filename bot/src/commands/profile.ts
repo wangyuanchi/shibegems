@@ -13,37 +13,40 @@ async function execute(interaction: ChatInputCommandInteraction) {
   await interaction.deferReply();
 
   try {
-    const profileRow = await getPrismaClient().profile.findUnique({
+    const profileWithGemsAndItems = await getPrismaClient().profile.findUnique({
       where: {
         user_id_guild_id: {
           user_id: BigInt(interaction.user.id),
           guild_id: BigInt(interaction.guildId!),
         },
       },
+      include: {
+        gems: true,
+        items: true,
+      },
     });
 
-    if (!profileRow) {
+    if (!profileWithGemsAndItems) {
       await interaction.editReply(
         "You do not have a profile, send a message in any channel to create one automatically."
       );
       return;
     }
 
-    const gemsRow = await getPrismaClient().gems.findUnique({
-      where: {
-        user_id_guild_id: {
-          user_id: BigInt(interaction.user.id),
-          guild_id: BigInt(interaction.guildId!),
-        },
-      },
-    });
+    const { user_id, guild_id, ...gems } = profileWithGemsAndItems.gems!;
+    const { networth } = profileWithGemsAndItems;
+    const items = profileWithGemsAndItems.items.map((element) => element.item);
 
-    const { user_id, guild_id, ...gems } = gemsRow!;
-    const { networth } = profileRow;
+    let description = `Networth: ${networth}`;
+
+    if (items.length > 0) {
+      description += "\nItems:\n";
+      description += items.join("\n");
+    }
 
     const embed = createEmbed(interaction, true)
       .setTitle(`${interaction.user.username}'s Profile`)
-      .setDescription(`Networth: ${networth}`);
+      .setDescription(description);
 
     for (const [key, value] of Object.entries(gems)) {
       embed.addFields({
