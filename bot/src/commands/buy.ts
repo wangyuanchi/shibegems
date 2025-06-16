@@ -55,34 +55,6 @@ async function execute(interaction: ChatInputCommandInteraction) {
       return;
     }
 
-    // Update 'items' table
-    await getPrismaClient().items.create({
-      data: {
-        user_id: BigInt(interaction.user.id),
-        guild_id: BigInt(interaction.guildId!),
-        item: item,
-      },
-    });
-
-    // Update 'gems' table
-    const data: Record<string, { decrement: number }> = {};
-    for (const [gem, count] of Object.entries(ItemCost[item])) {
-      if (count > 0) {
-        data[gem] = { decrement: count };
-      }
-    }
-
-    await getPrismaClient().gems.update({
-      where: {
-        user_id_guild_id: {
-          user_id: BigInt(interaction.user.id),
-          guild_id: BigInt(interaction.guildId!),
-        },
-      },
-      data: data,
-    });
-
-    // Update 'profile' table
     const profile = await getPrismaClient().profile.findUnique({
       where: {
         user_id_guild_id: {
@@ -92,15 +64,42 @@ async function execute(interaction: ChatInputCommandInteraction) {
       },
     });
 
-    await getPrismaClient().profile.update({
-      where: {
-        user_id_guild_id: {
+    const data: Record<string, { decrement: number }> = {};
+    for (const [gem, count] of Object.entries(ItemCost[item])) {
+      if (count > 0) {
+        data[gem] = { decrement: count };
+      }
+    }
+
+    await getPrismaClient().$transaction([
+      getPrismaClient().items.create({
+        data: {
           user_id: BigInt(interaction.user.id),
           guild_id: BigInt(interaction.guildId!),
+          item: item,
         },
-      },
-      data: updatedProfileAfterBuyingItem(profile!, item),
-    });
+      }),
+
+      getPrismaClient().gems.update({
+        where: {
+          user_id_guild_id: {
+            user_id: BigInt(interaction.user.id),
+            guild_id: BigInt(interaction.guildId!),
+          },
+        },
+        data: data,
+      }),
+
+      getPrismaClient().profile.update({
+        where: {
+          user_id_guild_id: {
+            user_id: BigInt(interaction.user.id),
+            guild_id: BigInt(interaction.guildId!),
+          },
+        },
+        data: updatedProfileAfterBuyingItem(profile!, item),
+      }),
+    ]);
 
     await interaction.editReply(`Successfully bought ${item}!`);
   } catch (err) {
