@@ -5,7 +5,9 @@ import { getPrismaClient } from "../clients/prisma";
 
 const command = new SlashCommandBuilder()
   .setName("spawn")
-  .setDescription("[ADMIN COMMAND] Spawn gems for testing purposes.")
+  .setDescription(
+    "Spawn gems for testing purposes. Only works in the development server."
+  )
   .addStringOption((opt) =>
     opt
       .setName("type")
@@ -38,9 +40,9 @@ const command = new SlashCommandBuilder()
 async function execute(interaction: ChatInputCommandInteraction) {
   await interaction.deferReply();
   try {
-    if (interaction.user.id !== "1378309602759807017") {
+    if (interaction.guildId !== "1378312561820438609") {
       await interaction.editReply(
-        "❌  You do not have permission to use this admin command."
+        "❌  You cannot use this command in this server."
       );
     }
 
