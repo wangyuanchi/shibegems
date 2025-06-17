@@ -8,6 +8,7 @@ import { buyCommand } from "./buy";
 import { leaderboardCommand } from "./leaderboard";
 import { pingCommand } from "./ping";
 import { profileCommand } from "./profile";
+import { resetCommand } from "./reset";
 import { spawnCommand } from "./spawn";
 
 const commands: (
@@ -20,6 +21,7 @@ const commands: (
   leaderboardCommand,
   buyCommand,
   spawnCommand,
+  resetCommand,
 ];
 
 export default commands.map((command) => command.toJSON());

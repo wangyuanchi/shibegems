@@ -3,6 +3,7 @@ import { buyExecute } from "../commands/buy";
 import { leaderboardExecute } from "../commands/leaderboard";
 import { pingExecute } from "../commands/ping";
 import { profileExecute } from "../commands/profile";
+import { resetExecute } from "../commands/reset";
 import { spawnExecute } from "../commands/spawn";
 
 export default async (interaction: Interaction) => {
@@ -24,6 +25,8 @@ export default async (interaction: Interaction) => {
         break;
       case "spawn":
         await spawnExecute(interaction);
+      case "reset":
+        await resetExecute(interaction);
     }
   } catch (error) {
     console.error(error);
