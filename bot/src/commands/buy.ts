@@ -17,6 +17,7 @@ const command = new SlashCommandBuilder()
       .setDescription("The name of the item.")
       .setRequired(true)
       .addChoices({ name: "chrysoberyl", value: "chrysoberyl" })
+      .addChoices({ name: "cymophane", value: "cymophane" })
   );
 
 async function execute(interaction: ChatInputCommandInteraction) {

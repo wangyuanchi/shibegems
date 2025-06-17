@@ -3,7 +3,7 @@ import { gems, profile } from "../generated/prisma";
 
 import { truncate } from "./gems";
 
-export type ItemName = "chrysoberyl";
+export type ItemName = "chrysoberyl" | "cymophane";
 
 type ItemGemCountMap = {
   [item in ItemName]: {
@@ -22,7 +22,22 @@ export const ItemCost: ItemGemCountMap = {
     diamond: 0,
     sunstone: 0,
     citrine: 0,
-    topaz: 100,
+    topaz: 200,
+    peridot: 0,
+    jade: 0,
+    aquamarine: 0,
+    sapphire: 0,
+    amethyst: 0,
+    kunzite: 0,
+    ruby: 0,
+    garnet: 0,
+    painite: 0,
+  },
+  cymophane: {
+    diamond: 0,
+    sunstone: 0,
+    citrine: 0,
+    topaz: 1000,
     peridot: 0,
     jade: 0,
     aquamarine: 0,
@@ -50,6 +65,21 @@ const ItemMultiplier: ItemGemMultiplierMap = {
     ruby_multiplier: 1,
     garnet_multiplier: 1,
     painite_multiplier: 2,
+  },
+  cymophane: {
+    diamond_multiplier: 1,
+    sunstone_multiplier: 1,
+    citrine_multiplier: 1,
+    topaz_multiplier: 1,
+    peridot_multiplier: 1,
+    jade_multiplier: 1,
+    aquamarine_multiplier: 1,
+    sapphire_multiplier: 1,
+    amethyst_multiplier: 1,
+    kunzite_multiplier: 1,
+    ruby_multiplier: 1,
+    garnet_multiplier: 1,
+    painite_multiplier: 4,
   },
 } as const;
 
