@@ -8,6 +8,7 @@ import {
 
 import { getPrismaClient } from "../clients/prisma";
 
+// The item is only worth 90% of the gems you spend.
 const command = new SlashCommandBuilder()
   .setName("buy")
   .setDescription("Buy any item from the shop.")

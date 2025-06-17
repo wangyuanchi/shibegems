@@ -15,6 +15,7 @@ async function execute(interaction: ChatInputCommandInteraction) {
       await interaction.editReply(
         "❌  You cannot use this command in this server."
       );
+      return;
     }
 
     const profileRow = await getPrismaClient().profile.findUnique({

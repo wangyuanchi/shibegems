@@ -10,6 +10,7 @@ import { pingCommand } from "./ping";
 import { profileCommand } from "./profile";
 import { resetCommand } from "./reset";
 import { spawnCommand } from "./spawn";
+import { tradeCommand } from "./trade";
 
 const commands: (
   | SlashCommandBuilder
@@ -22,6 +23,7 @@ const commands: (
   buyCommand,
   spawnCommand,
   resetCommand,
+  tradeCommand,
 ];
 
 export default commands.map((command) => command.toJSON());

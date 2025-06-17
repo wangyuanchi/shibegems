@@ -53,7 +53,7 @@ async function execute(interaction: ChatInputCommandInteraction) {
     for (const [key, value] of Object.entries(gems)) {
       embed.addFields({
         name: key.charAt(0).toUpperCase() + key.slice(1),
-        value: value.toString(),
+        value: value.toLocaleString(),
         inline: true,
       });
     }

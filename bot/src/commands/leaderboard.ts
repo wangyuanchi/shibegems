@@ -45,8 +45,8 @@ const command = new SlashCommandBuilder()
 
 async function execute(interaction: ChatInputCommandInteraction) {
   await interaction.deferReply();
-  const sub = interaction.options.getSubcommand();
   try {
+    const sub = interaction.options.getSubcommand();
     if (sub === "gem") {
       const type = interaction.options.getString("type", true) as GemName;
 
