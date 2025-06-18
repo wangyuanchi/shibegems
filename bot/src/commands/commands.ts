@@ -11,6 +11,7 @@ import { profileCommand } from "./profile";
 import { resetCommand } from "./reset";
 import { spawnCommand } from "./spawn";
 import { tradeCommand } from "./trade";
+import { tutorialCommand } from "./tutorial";
 
 const commands: (
   | SlashCommandBuilder
@@ -24,6 +25,7 @@ const commands: (
   spawnCommand,
   resetCommand,
   tradeCommand,
+  tutorialCommand,
 ];
 
 export default commands.map((command) => command.toJSON());
