@@ -1,11 +1,12 @@
 import {
   createTutorialActionRowButtons,
   tutorialExecute,
-  tutorialPages,
+  tutorialPagesEmbed,
 } from "../commands/tutorial";
 
 import { Interaction } from "discord.js";
 import { buyExecute } from "../commands/buy";
+import { createEmbed } from "../utils/embed";
 import { leaderboardExecute } from "../commands/leaderboard";
 import { pingExecute } from "../commands/ping";
 import { profileExecute } from "../commands/profile";
@@ -52,7 +53,11 @@ export default async (interaction: Interaction) => {
       switch (commandName) {
         case "tutorial":
           await interaction.update({
-            content: tutorialPages[newIndex],
+            embeds: [
+              createEmbed(interaction, false)
+                .setTitle(tutorialPagesEmbed[newIndex].title)
+                .setDescription(tutorialPagesEmbed[newIndex].description),
+            ],
             components: [createTutorialActionRowButtons(newIndex)],
           });
           break;

@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { GemName, GemWorth } from "../utils/gems";
 
+import { createEmbedDescriptionOnly } from "../utils/embed";
 import { getPrismaClient } from "../clients/prisma";
 
 const command = new SlashCommandBuilder()
@@ -41,9 +42,14 @@ async function execute(interaction: ChatInputCommandInteraction) {
   await interaction.deferReply();
   try {
     if (interaction.guildId !== "1378312561820438609") {
-      await interaction.editReply(
-        "❌  You cannot use this command in this server."
-      );
+      await interaction.editReply({
+        embeds: [
+          createEmbedDescriptionOnly(
+            "❌ You cannot use this command in this server."
+          ),
+        ],
+      });
+      return;
     }
 
     const profileRow = await getPrismaClient().profile.findUnique({
@@ -56,9 +62,13 @@ async function execute(interaction: ChatInputCommandInteraction) {
     });
 
     if (!profileRow) {
-      await interaction.editReply(
-        "⚠️  You do not have a profile, send a message in any channel to create one automatically."
-      );
+      await interaction.editReply({
+        embeds: [
+          createEmbedDescriptionOnly(
+            "⚠️ You do not have a profile, send a message in any channel to create one automatically."
+          ),
+        ],
+      });
       return;
     }
 
@@ -90,12 +100,20 @@ async function execute(interaction: ChatInputCommandInteraction) {
       }),
     ]);
 
-    await interaction.editReply(`✅  Successfully added ${count} ${type}!`);
+    await interaction.editReply({
+      embeds: [
+        createEmbedDescriptionOnly(`✅ Successfully added ${count} ${type}!`),
+      ],
+    });
   } catch (err) {
     console.error(err);
-    await interaction.editReply(
-      "🛑  An unexpected error occurred. Please try again later."
-    );
+    await interaction.editReply({
+      embeds: [
+        createEmbedDescriptionOnly(
+          "🛑 An unexpected error occurred. Please try again later."
+        ),
+      ],
+    });
   }
 }
 

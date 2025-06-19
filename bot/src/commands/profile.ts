@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 
 import { createEmbed } from "../utils/embed";
+import { createEmbedDescriptionOnly } from "../utils/embed";
 import { getPrismaClient } from "../clients/prisma";
 
 const command = new SlashCommandBuilder()
@@ -25,9 +26,13 @@ async function execute(interaction: ChatInputCommandInteraction) {
     });
 
     if (!profileWithGemsAndItems) {
-      await interaction.editReply(
-        "⚠️  You do not have a profile. Send a message in any channel to create one automatically."
-      );
+      await interaction.editReply({
+        embeds: [
+          createEmbedDescriptionOnly(
+            "⚠️ You do not have a profile. Send a message in any channel to create one automatically."
+          ),
+        ],
+      });
       return;
     }
 
@@ -59,9 +64,13 @@ async function execute(interaction: ChatInputCommandInteraction) {
     await interaction.editReply({ embeds: [embed] });
   } catch (err) {
     console.error(err);
-    await interaction.editReply(
-      "🛑  An unexpected error occurred. Please try again later."
-    );
+    await interaction.editReply({
+      embeds: [
+        createEmbedDescriptionOnly(
+          "🛑 An unexpected error occurred. Please try again later."
+        ),
+      ],
+    });
   }
 }
 

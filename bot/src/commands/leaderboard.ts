@@ -7,6 +7,7 @@ import {
 import { GemName } from "../utils/gems";
 import { convertToTrophy } from "../utils/trophy";
 import { createEmbed } from "../utils/embed";
+import { createEmbedDescriptionOnly } from "../utils/embed";
 import { fetchDiscordUsername } from "../utils/username";
 import { getPrismaClient } from "../clients/prisma";
 
@@ -16,7 +17,7 @@ const command = new SlashCommandBuilder()
   .addSubcommand((sub) =>
     sub
       .setName("gem")
-      .setDescription("View the leaderboard for a specific type of gem.")
+      .setDescription("View the leaderboard for a type of gem.")
       .addStringOption((opt) =>
         opt
           .setName("type")
@@ -62,7 +63,13 @@ async function execute(interaction: ChatInputCommandInteraction) {
       });
 
       if (gemsRows.length === 0) {
-        await interaction.editReply("👀  This leaderboard is currently empty.");
+        await interaction.editReply({
+          embeds: [
+            createEmbedDescriptionOnly(
+              "👀 This leaderboard is currently empty."
+            ),
+          ],
+        });
         return;
       }
 
@@ -95,7 +102,13 @@ async function execute(interaction: ChatInputCommandInteraction) {
       });
 
       if (profileRows.length === 0) {
-        await interaction.editReply("👀  This leaderboard is currently empty.");
+        await interaction.editReply({
+          embeds: [
+            createEmbedDescriptionOnly(
+              "👀 This leaderboard is currently empty."
+            ),
+          ],
+        });
         return;
       }
 
@@ -118,9 +131,13 @@ async function execute(interaction: ChatInputCommandInteraction) {
     }
   } catch (err) {
     console.error(err);
-    await interaction.editReply(
-      "🛑  An unexpected error occurred. Please try again later."
-    );
+    await interaction.editReply({
+      embeds: [
+        createEmbedDescriptionOnly(
+          "🛑 An unexpected error occurred. Please try again later."
+        ),
+      ],
+    });
   }
 }
 

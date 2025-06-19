@@ -2,6 +2,7 @@ import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { GemName, GemWorth } from "../utils/gems";
 import { TradeDownMap, TradeUpMap } from "../utils/trade";
 
+import { createEmbedDescriptionOnly } from "../utils/embed";
 import { getPrismaClient } from "../clients/prisma";
 
 const command = new SlashCommandBuilder()
@@ -88,9 +89,13 @@ async function execute(interaction: ChatInputCommandInteraction) {
     });
 
     if (!profileWithGems) {
-      await interaction.editReply(
-        "⚠️  You do not have a profile which is required to trade gems. Send a message in any channel to create one automatically."
-      );
+      await interaction.editReply({
+        embeds: [
+          createEmbedDescriptionOnly(
+            "⚠️ You do not have a profile which is required to trade gems. Send a message in any channel to create one automatically."
+          ),
+        ],
+      });
       return;
     }
 
@@ -106,9 +111,13 @@ async function execute(interaction: ChatInputCommandInteraction) {
       giveCount = receiveCount * 3;
     } else {
       if (receiveCount % 2 !== 0) {
-        await interaction.editReply(
-          "❌  You can only trade down to an even number of gems."
-        );
+        await interaction.editReply({
+          embeds: [
+            createEmbedDescriptionOnly(
+              "❌ You can only trade down to an even number of gems."
+            ),
+          ],
+        });
         return;
       }
 
@@ -117,11 +126,15 @@ async function execute(interaction: ChatInputCommandInteraction) {
     }
 
     if (gemsRow[giveType] < giveCount) {
-      await interaction.editReply(
-        `❌  You cannot afford this trade, you need ${
-          giveCount - gemsRow[giveType]
-        } more ${giveType}.`
-      );
+      await interaction.editReply({
+        embeds: [
+          createEmbedDescriptionOnly(
+            `❌ You cannot afford this trade, you need ${
+              giveCount - gemsRow[giveType]
+            } more ${giveType}.`
+          ),
+        ],
+      });
       return;
     }
 
@@ -156,14 +169,22 @@ async function execute(interaction: ChatInputCommandInteraction) {
       }),
     ]);
 
-    await interaction.editReply(
-      `✅  Successfully traded ${giveCount.toLocaleString()} ${giveType} for ${receiveCount.toLocaleString()} ${receiveType}!`
-    );
+    await interaction.editReply({
+      embeds: [
+        createEmbedDescriptionOnly(
+          `✅ Successfully traded ${giveCount.toLocaleString()} ${giveType} for ${receiveCount.toLocaleString()} ${receiveType}!`
+        ),
+      ],
+    });
   } catch (err) {
     console.error(err);
-    await interaction.editReply(
-      "🛑  An unexpected error occurred. Please try again later."
-    );
+    await interaction.editReply({
+      embeds: [
+        createEmbedDescriptionOnly(
+          "🛑 An unexpected error occurred. Please try again later."
+        ),
+      ],
+    });
   }
 }
 

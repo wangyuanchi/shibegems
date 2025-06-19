@@ -1,5 +1,6 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 
+import { createEmbedDescriptionOnly } from "../utils/embed";
 import { getPrismaClient } from "../clients/prisma";
 
 const command = new SlashCommandBuilder()
@@ -12,9 +13,13 @@ async function execute(interaction: ChatInputCommandInteraction) {
   await interaction.deferReply();
   try {
     if (interaction.guildId !== "1378312561820438609") {
-      await interaction.editReply(
-        "❌  You cannot use this command in this server."
-      );
+      await interaction.editReply({
+        embeds: [
+          createEmbedDescriptionOnly(
+            "❌ You cannot use this command in this server."
+          ),
+        ],
+      });
       return;
     }
 
@@ -28,9 +33,13 @@ async function execute(interaction: ChatInputCommandInteraction) {
     });
 
     if (!profileRow) {
-      await interaction.editReply(
-        "⚠️  No profile to delete as you do not have one."
-      );
+      await interaction.editReply({
+        embeds: [
+          createEmbedDescriptionOnly(
+            "⚠️ No profile to delete as you do not have one."
+          ),
+        ],
+      });
       return;
     }
 
@@ -43,12 +52,18 @@ async function execute(interaction: ChatInputCommandInteraction) {
       },
     });
 
-    await interaction.editReply("✅  Successfully deleted profile.");
+    await interaction.editReply({
+      embeds: [createEmbedDescriptionOnly("✅ Successfully deleted profile.")],
+    });
   } catch (err) {
     console.error(err);
-    await interaction.editReply(
-      "🛑  An unexpected error occurred. Please try again later."
-    );
+    await interaction.editReply({
+      embeds: [
+        createEmbedDescriptionOnly(
+          "🛑 An unexpected error occurred. Please try again later."
+        ),
+      ],
+    });
   }
 }
 

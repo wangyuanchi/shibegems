@@ -6,6 +6,7 @@ import {
   updatedProfileAfterBuyingItem,
 } from "../utils/items";
 
+import { createEmbedDescriptionOnly } from "../utils/embed";
 import { getPrismaClient } from "../clients/prisma";
 
 const command = new SlashCommandBuilder()
@@ -37,7 +38,9 @@ async function execute(interaction: ChatInputCommandInteraction) {
     });
 
     if (exist) {
-      await interaction.editReply("⚠️  You already have this item.");
+      await interaction.editReply({
+        embeds: [createEmbedDescriptionOnly("⚠️ You already have this item.")],
+      });
       return;
     }
 
@@ -52,7 +55,9 @@ async function execute(interaction: ChatInputCommandInteraction) {
     });
 
     if (!affordable(gemsRow, item)) {
-      await interaction.editReply("❌  You cannot afford this item.");
+      await interaction.editReply({
+        embeds: [createEmbedDescriptionOnly("❌ You cannot afford this item.")],
+      });
       return;
     }
 
@@ -101,13 +106,20 @@ async function execute(interaction: ChatInputCommandInteraction) {
         data: updatedProfileAfterBuyingItem(profile!, item),
       }),
     ]);
-
-    await interaction.editReply(`✅  Successfully bought \`\`${item}\`\`!`);
+    await interaction.editReply({
+      embeds: [
+        createEmbedDescriptionOnly(`✅ Successfully bought \`\`${item}\`\`!`),
+      ],
+    });
   } catch (err) {
     console.error(err);
-    await interaction.editReply(
-      "🛑  An unexpected error occurred. Please try again later."
-    );
+    await interaction.editReply({
+      embeds: [
+        createEmbedDescriptionOnly(
+          "🛑 An unexpected error occurred. Please try again later."
+        ),
+      ],
+    });
   }
 }
 
