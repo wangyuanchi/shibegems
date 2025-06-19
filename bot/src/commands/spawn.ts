@@ -6,7 +6,7 @@ import { getPrismaClient } from "../clients/prisma";
 const command = new SlashCommandBuilder()
   .setName("spawn")
   .setDescription(
-    "Spawn gems for testing purposes. Only works in the development server."
+    "Spawn any type of gem for yourself. Only works in the development server."
   )
   .addStringOption((opt) =>
     opt

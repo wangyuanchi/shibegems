@@ -12,11 +12,11 @@ import { getPrismaClient } from "../clients/prisma";
 
 const command = new SlashCommandBuilder()
   .setName("leaderboard")
-  .setDescription("Select the leaderboard you want to view.")
+  .setDescription("View any type of leaderboard.")
   .addSubcommand((sub) =>
     sub
       .setName("gem")
-      .setDescription("View the leaderboard for a specific gem type.")
+      .setDescription("View the leaderboard for a specific type of gem.")
       .addStringOption((opt) =>
         opt
           .setName("type")

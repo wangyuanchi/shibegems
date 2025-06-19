@@ -5,7 +5,7 @@ import { getPrismaClient } from "../clients/prisma";
 const command = new SlashCommandBuilder()
   .setName("reset")
   .setDescription(
-    "Deletes your entire profile. Only works in the development server."
+    "Delete your entire profile. Only works in the development server."
   );
 
 async function execute(interaction: ChatInputCommandInteraction) {

@@ -5,9 +5,7 @@ import { getPrismaClient } from "../clients/prisma";
 
 const command = new SlashCommandBuilder()
   .setName("profile")
-  .setDescription(
-    "Shows the number of gems you have found and all the items you own."
-  );
+  .setDescription("View your profile.");
 
 async function execute(interaction: ChatInputCommandInteraction) {
   await interaction.deferReply();

@@ -4,7 +4,6 @@ import { TradeDownMap, TradeUpMap } from "../utils/trade";
 
 import { getPrismaClient } from "../clients/prisma";
 
-// Does not skip tiers. Does not involve Painite. You will always lose some networth with any trade.
 const command = new SlashCommandBuilder()
   .setName("trade")
   .setDescription("Trade your gems for lower or higher tier gems.")
