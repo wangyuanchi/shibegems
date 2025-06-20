@@ -74,12 +74,45 @@ const page4: Page = {
 The gem multiplier is multiplied to your base gem chance and also stacks.
 The item is only worth 90% of the gems you spend.
 
-\`\`\`
-Item         Cost         Effect
-Chrysoberyl  200 Topaz    x2 painite_multiplier
-Cymophane    1,000 Topaz  x4 painite_multiplier
-\`\`\`
-More items will be added soon!
+\`\`seven of diamonds\`\`
+x1.07 diamond_multiplier
+7 Diamond
+
+\`\`night vision goggles\`\`
+x1.1 sunstone/citrine_multiplier
+88 Diamond
+
+\`\`topaz compass\`\`
+x1.15 topaz_multiplier
+25 Sunstone 25 Citrine
+
+\`\`five leaf clover\`\`
+x1.25 peridot/jade_multiplier
+25 Peridot 5 Jade
+
+\`\`blue crystal ball\`\`
+x1.33 aquamarine/sapphire_multiplier
+9 Aquamarine 3 Sapphire
+
+\`\`moonbow particles\`\`
+x1.35 amethyst_multiplier
+1 Sunstone 2 Topaz 3 Peridot 4 Aquamarine 5 Amethyst
+
+\`\`caisu's pink map\`\`
+x1.4 kunzite_multiplier
+4 Kunzite
+
+\`\`rarespberry\`\`
+x1.45 ruby_multiplier
+2 Ruby
+
+\`\`red topaz\`\`
+x1.5 garnet_multiplier
+500 Topaz
+
+\`\`tempel-tuttle shard\`\`
+x2.5 painite_multiplier
+5 Garnet
 `,
 };
 

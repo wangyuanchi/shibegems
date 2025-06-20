@@ -1,5 +1,6 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 
+import { ItemDisplayNames } from "../utils/items";
 import { createEmbed } from "../utils/embed";
 import { createEmbedDescriptionOnly } from "../utils/embed";
 import { getPrismaClient } from "../clients/prisma";
@@ -39,7 +40,7 @@ async function execute(interaction: ChatInputCommandInteraction) {
     const { user_id, guild_id, ...gems } = profileWithGemsAndItems.gems!;
     const { networth } = profileWithGemsAndItems;
     const items = profileWithGemsAndItems.items.map(
-      (element) => `\`\`${element.item}\`\``
+      (element) => `\`\`${ItemDisplayNames[element.item]}\`\``
     );
 
     let description = `Networth: ${networth.toLocaleString()}`;

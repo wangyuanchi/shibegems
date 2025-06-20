@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import {
   ItemCost,
+  ItemDisplayNames,
   ItemName,
   affordable,
   updatedProfileAfterBuyingItem,
@@ -17,8 +18,18 @@ const command = new SlashCommandBuilder()
       .setName("item")
       .setDescription("The name of the item.")
       .setRequired(true)
-      .addChoices({ name: "chrysoberyl", value: "chrysoberyl" })
-      .addChoices({ name: "cymophane", value: "cymophane" })
+      .addChoices(
+        { name: "seven of diamonds", value: "seven_of_diamonds" },
+        { name: "night vision goggles", value: "night_vision_goggles" },
+        { name: "topaz compass", value: "topaz_compass" },
+        { name: "five leaf clover", value: "five_leaf_clover" },
+        { name: "blue crystal ball", value: "blue_crystal_ball" },
+        { name: "moonbow particles", value: "moonbow_particles" },
+        { name: "caisu's pink map", value: "caisu_pink_map" },
+        { name: "rarespberry", value: "rarespberry" },
+        { name: "red topaz", value: "red_topaz" },
+        { name: "tempel-tuttle shard", value: "tempel_tuttle_shard" }
+      )
   );
 
 async function execute(interaction: ChatInputCommandInteraction) {
@@ -108,7 +119,9 @@ async function execute(interaction: ChatInputCommandInteraction) {
     ]);
     await interaction.editReply({
       embeds: [
-        createEmbedDescriptionOnly(`✅ Successfully bought \`\`${item}\`\`!`),
+        createEmbedDescriptionOnly(
+          `✅ Successfully bought \`\`${ItemDisplayNames[item]}\`\`!`
+        ),
       ],
     });
   } catch (err) {
