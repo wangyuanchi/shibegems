@@ -3,7 +3,7 @@
 CREATE TABLE profile (
     user_id BIGINT NOT NULL,
     guild_id BIGINT NOT NULL,
-    networth INTEGER NOT NULL DEFAULT 0,
+    networth BIGINT NOT NULL DEFAULT 0,
     diamond_multiplier DOUBLE PRECISION NOT NULL DEFAULT 1.000,
     sunstone_multiplier DOUBLE PRECISION NOT NULL DEFAULT 1.000,
     citrine_multiplier DOUBLE PRECISION NOT NULL DEFAULT 1.000,

@@ -36,6 +36,7 @@ const command = new SlashCommandBuilder()
       .setDescription("The number of gems to spawn.")
       .setRequired(true)
       .setMinValue(1)
+      .setMaxValue(10000)
   );
 
 async function execute(interaction: ChatInputCommandInteraction) {
@@ -95,14 +96,16 @@ async function execute(interaction: ChatInputCommandInteraction) {
           },
         },
         data: {
-          networth: { increment: count * GemWorth[type] },
+          networth: { increment: BigInt(count * GemWorth[type]) },
         },
       }),
     ]);
 
     await interaction.editReply({
       embeds: [
-        createEmbedDescriptionOnly(`✅ Successfully added ${count} ${type}!`),
+        createEmbedDescriptionOnly(
+          `✅ Successfully added ${count.toLocaleString()} ${type}!`
+        ),
       ],
     });
   } catch (err) {

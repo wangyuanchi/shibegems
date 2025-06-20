@@ -11,15 +11,15 @@ import (
 type Gem struct {
 	Name   string
 	Chance float64
-	Worth  int32
+	Worth  int64
 }
 
 /*
 Base value: 100
 Exponent: 1.1
 */
-func CalculateWorth(chance float64) int32 {
-	return int32(100 * math.Pow(1/chance, 1.1))
+func CalculateWorth(chance float64) int64 {
+	return int64(100 * math.Pow(1/chance, 1.1))
 }
 
 var (
@@ -68,7 +68,7 @@ func UpdateGemAndNetworth(ctx context.Context, pgq *postgres.Queries, authorID, 
 		_, err = pgq.UpdateNetworth(ctx, postgres.UpdateNetworthParams{
 			UserID:   authorID,
 			GuildID:  guildID,
-			Networth: amount * DIAMOND.Worth,
+			Networth: int64(amount) * DIAMOND.Worth,
 		})
 		return err
 
@@ -84,7 +84,7 @@ func UpdateGemAndNetworth(ctx context.Context, pgq *postgres.Queries, authorID, 
 		_, err = pgq.UpdateNetworth(ctx, postgres.UpdateNetworthParams{
 			UserID:   authorID,
 			GuildID:  guildID,
-			Networth: amount * SUNSTONE.Worth,
+			Networth: int64(amount) * SUNSTONE.Worth,
 		})
 		return err
 
@@ -100,7 +100,7 @@ func UpdateGemAndNetworth(ctx context.Context, pgq *postgres.Queries, authorID, 
 		_, err = pgq.UpdateNetworth(ctx, postgres.UpdateNetworthParams{
 			UserID:   authorID,
 			GuildID:  guildID,
-			Networth: amount * CITRINE.Worth,
+			Networth: int64(amount) * CITRINE.Worth,
 		})
 		return err
 
@@ -116,7 +116,7 @@ func UpdateGemAndNetworth(ctx context.Context, pgq *postgres.Queries, authorID, 
 		_, err = pgq.UpdateNetworth(ctx, postgres.UpdateNetworthParams{
 			UserID:   authorID,
 			GuildID:  guildID,
-			Networth: amount * TOPAZ.Worth,
+			Networth: int64(amount) * TOPAZ.Worth,
 		})
 		return err
 
@@ -132,7 +132,7 @@ func UpdateGemAndNetworth(ctx context.Context, pgq *postgres.Queries, authorID, 
 		_, err = pgq.UpdateNetworth(ctx, postgres.UpdateNetworthParams{
 			UserID:   authorID,
 			GuildID:  guildID,
-			Networth: amount * PERIDOT.Worth,
+			Networth: int64(amount) * PERIDOT.Worth,
 		})
 		return err
 
@@ -148,7 +148,7 @@ func UpdateGemAndNetworth(ctx context.Context, pgq *postgres.Queries, authorID, 
 		_, err = pgq.UpdateNetworth(ctx, postgres.UpdateNetworthParams{
 			UserID:   authorID,
 			GuildID:  guildID,
-			Networth: amount * JADE.Worth,
+			Networth: int64(amount) * JADE.Worth,
 		})
 		return err
 
@@ -164,7 +164,7 @@ func UpdateGemAndNetworth(ctx context.Context, pgq *postgres.Queries, authorID, 
 		_, err = pgq.UpdateNetworth(ctx, postgres.UpdateNetworthParams{
 			UserID:   authorID,
 			GuildID:  guildID,
-			Networth: amount * AQUAMARINE.Worth,
+			Networth: int64(amount) * AQUAMARINE.Worth,
 		})
 		return err
 
@@ -180,7 +180,7 @@ func UpdateGemAndNetworth(ctx context.Context, pgq *postgres.Queries, authorID, 
 		_, err = pgq.UpdateNetworth(ctx, postgres.UpdateNetworthParams{
 			UserID:   authorID,
 			GuildID:  guildID,
-			Networth: amount * SAPPHIRE.Worth,
+			Networth: int64(amount) * SAPPHIRE.Worth,
 		})
 		return err
 
@@ -196,7 +196,7 @@ func UpdateGemAndNetworth(ctx context.Context, pgq *postgres.Queries, authorID, 
 		_, err = pgq.UpdateNetworth(ctx, postgres.UpdateNetworthParams{
 			UserID:   authorID,
 			GuildID:  guildID,
-			Networth: amount * AMETHYST.Worth,
+			Networth: int64(amount) * AMETHYST.Worth,
 		})
 		return err
 
@@ -212,7 +212,7 @@ func UpdateGemAndNetworth(ctx context.Context, pgq *postgres.Queries, authorID, 
 		_, err = pgq.UpdateNetworth(ctx, postgres.UpdateNetworthParams{
 			UserID:   authorID,
 			GuildID:  guildID,
-			Networth: amount * KUNZITE.Worth,
+			Networth: int64(amount) * KUNZITE.Worth,
 		})
 		return err
 
@@ -228,7 +228,7 @@ func UpdateGemAndNetworth(ctx context.Context, pgq *postgres.Queries, authorID, 
 		_, err = pgq.UpdateNetworth(ctx, postgres.UpdateNetworthParams{
 			UserID:   authorID,
 			GuildID:  guildID,
-			Networth: amount * RUBY.Worth,
+			Networth: int64(amount) * RUBY.Worth,
 		})
 		return err
 
@@ -244,7 +244,7 @@ func UpdateGemAndNetworth(ctx context.Context, pgq *postgres.Queries, authorID, 
 		_, err = pgq.UpdateNetworth(ctx, postgres.UpdateNetworthParams{
 			UserID:   authorID,
 			GuildID:  guildID,
-			Networth: amount * GARNET.Worth,
+			Networth: int64(amount) * GARNET.Worth,
 		})
 		return err
 
@@ -260,7 +260,7 @@ func UpdateGemAndNetworth(ctx context.Context, pgq *postgres.Queries, authorID, 
 		_, err = pgq.UpdateNetworth(ctx, postgres.UpdateNetworthParams{
 			UserID:   authorID,
 			GuildID:  guildID,
-			Networth: amount * PAINITE.Worth,
+			Networth: int64(amount) * PAINITE.Worth,
 		})
 		return err
 

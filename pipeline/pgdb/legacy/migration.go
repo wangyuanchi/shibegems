@@ -70,19 +70,19 @@ func Migrate(ctx context.Context, pgq *postgres.Queries, dataPath string, run bo
 			return
 		}
 
-		networth := int32(user[1])*utils.DIAMOND.Worth +
-			int32(user[2])*utils.SUNSTONE.Worth +
-			int32(user[3])*utils.CITRINE.Worth +
-			int32(user[4])*utils.TOPAZ.Worth +
-			int32(user[5])*utils.PERIDOT.Worth +
-			int32(user[6])*utils.JADE.Worth +
-			int32(user[7])*utils.AQUAMARINE.Worth +
-			int32(user[8])*utils.SAPPHIRE.Worth +
-			int32(user[9])*utils.AMETHYST.Worth +
-			int32(user[10])*utils.KUNZITE.Worth +
-			int32(user[11])*utils.RUBY.Worth +
-			int32(user[12])*utils.GARNET.Worth +
-			int32(user[13])*utils.PAINITE.Worth
+		networth := user[1]*int64(utils.DIAMOND.Worth) +
+			user[2]*int64(utils.SUNSTONE.Worth) +
+			user[3]*int64(utils.CITRINE.Worth) +
+			user[4]*int64(utils.TOPAZ.Worth) +
+			user[5]*int64(utils.PERIDOT.Worth) +
+			user[6]*int64(utils.JADE.Worth) +
+			user[7]*int64(utils.AQUAMARINE.Worth) +
+			user[8]*int64(utils.SAPPHIRE.Worth) +
+			user[9]*int64(utils.AMETHYST.Worth) +
+			user[10]*int64(utils.KUNZITE.Worth) +
+			user[11]*int64(utils.RUBY.Worth) +
+			user[12]*int64(utils.GARNET.Worth) +
+			user[13]*int64(utils.PAINITE.Worth)
 
 		_, err = pgq.UpdateNetworth(ctx, postgres.UpdateNetworthParams{
 			UserID:   user[0],

@@ -120,7 +120,7 @@ export function updatedProfileAfterBuyingItem(
   // Update networth
   // Items are worth 90% of their cost
   updatedProfile["networth"] =
-    profile["networth"] - truncate(0.1 * itemCostToNetworth(item));
+    profile["networth"] - BigInt(truncate(0.1 * itemCostToNetworth(item)));
 
   return updatedProfile;
 }

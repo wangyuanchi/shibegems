@@ -96,13 +96,13 @@ RETURNING user_id, guild_id, networth
 type UpdateNetworthParams struct {
 	UserID   int64
 	GuildID  int64
-	Networth int32
+	Networth int64
 }
 
 type UpdateNetworthRow struct {
 	UserID   int64
 	GuildID  int64
-	Networth int32
+	Networth int64
 }
 
 func (q *Queries) UpdateNetworth(ctx context.Context, arg UpdateNetworthParams) (UpdateNetworthRow, error) {

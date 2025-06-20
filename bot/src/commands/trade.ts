@@ -161,9 +161,10 @@ async function execute(interaction: ChatInputCommandInteraction) {
         },
         data: {
           networth: {
-            decrement:
+            decrement: BigInt(
               giveCount * GemWorth[giveType] -
-              receiveCount * GemWorth[receiveType],
+                receiveCount * GemWorth[receiveType]
+            ),
           },
         },
       }),

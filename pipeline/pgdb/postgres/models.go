@@ -22,10 +22,16 @@ type Gem struct {
 	Painite    int32
 }
 
+type Item struct {
+	UserID  int64
+	GuildID int64
+	Item    string
+}
+
 type Profile struct {
 	UserID               int64
 	GuildID              int64
-	Networth             int32
+	Networth             int64
 	DiamondMultiplier    float64
 	SunstoneMultiplier   float64
 	CitrineMultiplier    float64

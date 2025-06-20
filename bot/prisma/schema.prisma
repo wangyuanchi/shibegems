@@ -41,7 +41,7 @@ model goose_db_version {
 model profile {
   user_id               BigInt
   guild_id              BigInt
-  networth              Int     @default(0)
+  networth              BigInt  @default(0)
   diamond_multiplier    Float   @default(1.000)
   sunstone_multiplier   Float   @default(1.000)
   citrine_multiplier    Float   @default(1.000)
