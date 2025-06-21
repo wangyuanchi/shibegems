@@ -36,6 +36,15 @@ func main() {
 		log.Fatal("POSTGRES_URL is not found in the environment")
 	}
 
+	runDataMigration := os.Getenv("RUN_DATA_MIGRATION")
+	if runDataMigration == "" {
+		log.Fatal("RUN_DATA_MIGRATION is not found in the environment")
+	}
+	runDataMigrationBool, err := strconv.ParseBool(runDataMigration)
+	if err != nil {
+		log.Fatalf("Invalid RUN_DATA_MIGRATION")
+	}
+
 	// Context that is used throughout the pipeline
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -63,7 +72,7 @@ func main() {
 		This performs the data migration to the "gems" table
 		An additional "backup" table is also manually created
 	*/
-	legacy.Migrate(ctx, pgq, "./pgdb/legacy/gems.json", false)
+	legacy.Migrate(ctx, pgq, "./pgdb/legacy/gems.json", runDataMigrationBool)
 
 	// Main task of this pipeline
 	sigCh := make(chan os.Signal, 1)
