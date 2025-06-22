@@ -132,7 +132,7 @@ const page6 = {
   description: `Feel free to join the development server!
   
 **Permanent Invite Link:**
-https://discord.gg/QMTJcqZz
+https://discord.gg/Q2zMhmHTq3
 `,
 };
 
