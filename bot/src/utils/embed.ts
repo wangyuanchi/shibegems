@@ -11,7 +11,7 @@ export function createEmbed(
 ) {
   const embed = new EmbedBuilder()
     .setColor(0x3e8cf9)
-    .setFooter({ text: interaction.guild?.name! })
+    .setFooter({ text: interaction.guild?.name ?? "Unknown Server" })
     .setTimestamp();
 
   if (displayAvatar) {

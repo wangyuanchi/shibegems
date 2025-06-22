@@ -20,7 +20,12 @@ const discordClient = getDiscordClient();
 discordClient.once("ready", async () => {
   console.log(`Logged in as ${discordClient.user?.tag}`);
 
-  if (!process.env.CLIENT_ID || !process.env.GUILD_ID || !process.env.TOKEN) {
+  if (
+    !process.env.CLIENT_ID ||
+    !process.env.PROD_GUILD_ID ||
+    !process.env.DEV_GUILD_ID ||
+    !process.env.TOKEN
+  ) {
     console.error(
       "Error: Ensure CLIENT_ID, GUILD_ID and TOKEN environment variables are defined"
     );
@@ -30,11 +35,24 @@ discordClient.once("ready", async () => {
   const rest = new REST().setToken(process.env.TOKEN);
 
   try {
-    // To support multiple guilds, use Routes.applicationCommands
+    /* To support multiple guilds in the future, use Routes.applicationCommands
+    await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), {
+      body: commands,
+    });
+    */
+
     await rest.put(
       Routes.applicationGuildCommands(
         process.env.CLIENT_ID,
-        process.env.GUILD_ID
+        process.env.PROD_GUILD_ID
+      ),
+      { body: commands }
+    );
+
+    await rest.put(
+      Routes.applicationGuildCommands(
+        process.env.CLIENT_ID,
+        process.env.DEV_GUILD_ID
       ),
       { body: commands }
     );

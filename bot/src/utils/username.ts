@@ -6,6 +6,9 @@ export async function fetchDiscordUsername(user_id: bigint): Promise<string> {
   if (!username) {
     try {
       username = (await getDiscordClient().users.fetch(userID)).username;
+      if (username.startsWith("deleted_user_")) {
+        username = "Deleted User";
+      }
     } catch {
       username = userID;
     }
