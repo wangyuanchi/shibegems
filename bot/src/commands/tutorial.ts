@@ -104,15 +104,15 @@ x1.4 kunzite_multiplier
 
 \`\`rarespberry\`\`
 x1.45 ruby_multiplier
-2 Ruby
+80 Jade 1 Ruby
 
 \`\`red topaz\`\`
 x1.5 garnet_multiplier
-500 Topaz
+1000 Topaz
 
 \`\`tempel-tuttle shard\`\`
 x2.5 painite_multiplier
-5 Garnet
+10000 Diamond 4 Garnet
 `,
 };
 
