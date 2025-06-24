@@ -42,15 +42,18 @@ const command = new SlashCommandBuilder()
 async function execute(interaction: ChatInputCommandInteraction) {
   await interaction.deferReply();
   try {
-    if (interaction.guildId !== "1378312561820438609") {
-      await interaction.editReply({
-        embeds: [
-          createEmbedDescriptionOnly(
-            "❌ You cannot use this command in this server."
-          ),
-        ],
-      });
-      return;
+    // shibe.dev account bypass
+    if (interaction.user.id !== "1378309602759807017") {
+      if (interaction.guildId !== "1378312561820438609") {
+        await interaction.editReply({
+          embeds: [
+            createEmbedDescriptionOnly(
+              "❌ You cannot use this command in this server."
+            ),
+          ],
+        });
+        return;
+      }
     }
 
     const profileRow = await getPrismaClient().profile.findUnique({
