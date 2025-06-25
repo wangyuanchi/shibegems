@@ -39,7 +39,7 @@ func RunConsumer(wg *sync.WaitGroup, ctx context.Context, pgq *postgres.Queries,
 			}
 
 			for _, stream := range res {
-				log.Printf("[%v] Read %v messages from Redis %v", consumerName, len(stream.Messages), streamName)
+				// log.Printf("[%v] Read %v messages from Redis %v", consumerName, len(stream.Messages), streamName)
 				processAcknowledgeDelete(ctx, pgq, client, stream, streamName, consumerGroupName, consumerName)
 			}
 		}
@@ -123,7 +123,7 @@ func processAcknowledgeDelete(ctx context.Context, pgq *postgres.Queries, client
 				log.Printf("[%v] Failed to update gem and networth: %v", consumerName, err)
 				continue // Left in pending entries list
 			}
-			log.Printf("[%v] %v found a %v!", consumerName, authorID, gem.Name)
+			// log.Printf("[%v] %v found a %v!", consumerName, authorID, gem.Name)
 		}
 
 		err = client.XAck(ctx, streamName, consumerGroupName, message.ID).Err()
@@ -138,7 +138,7 @@ func processAcknowledgeDelete(ctx context.Context, pgq *postgres.Queries, client
 		} else if deleted == 0 {
 			log.Printf("[%v] Message entry %v was already deleted", consumerName, message.ID)
 		} else {
-			log.Printf("[%v] Acknowledged and deleted message entry %v", consumerName, message.ID)
+			// log.Printf("[%v] Acknowledged and deleted message entry %v", consumerName, message.ID)
 		}
 	}
 }
