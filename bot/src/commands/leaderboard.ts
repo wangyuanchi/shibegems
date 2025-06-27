@@ -103,7 +103,7 @@ async function execute(interaction: ChatInputCommandInteraction) {
       );
 
       embed.setDescription(
-        `You are ranked #${userRank} with ${userGemCount} ${type}.`
+        `You are ranked #${userRank.toLocaleString()} with ${userGemCount.toLocaleString()} ${type}.`
       );
 
       const fields: APIEmbedField[] = await Promise.all(
@@ -171,7 +171,7 @@ async function execute(interaction: ChatInputCommandInteraction) {
       );
 
       embed.setDescription(
-        `You are ranked #${userRank} with a networth of ${userNetworth}.`
+        `You are ranked #${userRank.toLocaleString()} with a networth of ${userNetworth.toLocaleString()}.`
       );
 
       const fields: APIEmbedField[] = await Promise.all(
