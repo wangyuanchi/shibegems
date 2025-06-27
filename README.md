@@ -1,4 +1,4 @@
-![banner.png](/banner.png)
+[![banner.png](/banner.png)](https://discord.com/oauth2/authorize?client_id=1378311804710551692&permissions=68608&integration_type=0&scope=bot+applications.commands)
 
 ## Table of Contents
 
@@ -19,6 +19,8 @@ Every time you send a message, you have a chance to find a gem.
 - Buy items which increase your gem chance
 - Trade for gems that are lower or higher in rarity
 - Climb up the networth and gemstone leaderboards
+
+**You can invite shibegems to your discord server [here](https://discord.com/oauth2/authorize?client_id=1378311804710551692&permissions=68608&integration_type=0&scope=bot+applications.commands).**
 
 Use `/tutorial` to know more about how the bot works!
 
