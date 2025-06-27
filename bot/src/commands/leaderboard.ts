@@ -92,6 +92,7 @@ async function execute(interaction: ChatInputCommandInteraction) {
       const userRank =
         (await getPrismaClient().gems.count({
           where: {
+            guild_id: BigInt(interaction.guildId!),
             [type]: {
               gt: userGemCount,
             },
@@ -160,6 +161,7 @@ async function execute(interaction: ChatInputCommandInteraction) {
       const userRank =
         (await getPrismaClient().profile.count({
           where: {
+            guild_id: BigInt(interaction.guildId!),
             networth: {
               gt: userNetworth,
             },
