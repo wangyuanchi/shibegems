@@ -34,17 +34,16 @@ It is currently hosted on `AWS EC2` and there are `Cron` jobs for logging and da
 
 ## Environment Variables
 
-| Variable Name      | Directory  | Additional Notes                         |
-| :----------------- | :--------- | :--------------------------------------- |
-| CLIENT_ID          | ./bot      | Bot Application ID                       |
-| PROD_GUILD_ID      | ./bot      | A Discord Server ID                      |
-| DEV_GUILD_ID       | ./bot      | A Discord Server ID                      |
-| TOKEN              | ./bot      | Discord Bot Token                        |
-| REDIS_URL          | ./bot      | Redis Database URL                       |
-| DATABASE_URL       | ./bot      | Postgres Database URL (Prisma)           |
-| REDIS_URL          | ./pipeline | Redis Database URL                       |
-| POSTGRES_URL       | ./pipeline | Postgres Database URL                    |
-| RUN_DATA_MIGRATION | ./pipeline | Either "true" or "false" (Run only once) |
-| POSTGRES_USER      | .          | Postgres Username                        |
-| POSTGRES_PASSWORD  | .          | Postgres Password                        |
-| POSTGRES_DB        | .          | Postgres Database Name                   |
+| Variable Name      | Directory  | Additional Notes                                 |
+| :----------------- | :--------- | :----------------------------------------------- |
+| CLIENT_ID          | ./bot      | Bot Application ID                               |
+| GUILD_ID           | ./bot      | Discord Server ID (Instantly registers commands) |
+| TOKEN              | ./bot      | Discord Bot Token                                |
+| REDIS_URL          | ./bot      | Redis Database URL                               |
+| DATABASE_URL       | ./bot      | Postgres Database URL (Prisma)                   |
+| REDIS_URL          | ./pipeline | Redis Database URL                               |
+| POSTGRES_URL       | ./pipeline | Postgres Database URL                            |
+| RUN_DATA_MIGRATION | ./pipeline | Either "true" or "false" (Run only once)         |
+| POSTGRES_USER      | .          | Postgres Username                                |
+| POSTGRES_PASSWORD  | .          | Postgres Password                                |
+| POSTGRES_DB        | .          | Postgres Database Name                           |
