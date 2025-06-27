@@ -37,7 +37,7 @@ It is currently hosted on `AWS EC2` and there are `Cron` jobs for logging and da
 | Variable Name      | Directory  | Additional Notes                                 |
 | :----------------- | :--------- | :----------------------------------------------- |
 | CLIENT_ID          | ./bot      | Bot Application ID                               |
-| GUILD_ID           | ./bot      | Discord Server ID (Instantly registers commands) |
+| DEV_GUILD_ID       | ./bot      | Development Discord Server ID ("" in Production) |
 | TOKEN              | ./bot      | Discord Bot Token                                |
 | REDIS_URL          | ./bot      | Redis Database URL                               |
 | DATABASE_URL       | ./bot      | Postgres Database URL (Prisma)                   |

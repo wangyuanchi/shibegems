@@ -20,9 +20,13 @@ const discordClient = getDiscordClient();
 discordClient.once("ready", async () => {
   console.log(`Logged in as ${discordClient.user?.tag}`);
 
-  if (!process.env.CLIENT_ID || !process.env.GUILD_ID || !process.env.TOKEN) {
+  if (
+    !process.env.CLIENT_ID ||
+    !process.env.DEV_GUILD_ID ||
+    !process.env.TOKEN
+  ) {
     console.error(
-      "Error: Ensure CLIENT_ID, GUILD_ID and TOKEN environment variables are defined"
+      "Error: Ensure CLIENT_ID, DEV_GUILD_ID and TOKEN environment variables are defined"
     );
     return;
   }
@@ -30,23 +34,25 @@ discordClient.once("ready", async () => {
   const rest = new REST().setToken(process.env.TOKEN);
 
   try {
-    await rest.put(
-      Routes.applicationGuildCommands(
-        process.env.CLIENT_ID,
-        process.env.GUILD_ID // For instant registering of commands
-      ),
-      { body: commands }
-    );
+    if (process.env.DEV_GUILD_ID !== "") {
+      await rest.put(
+        Routes.applicationGuildCommands(
+          process.env.CLIENT_ID,
+          process.env.DEV_GUILD_ID // For instant registering of commands
+        ),
+        { body: commands }
+      );
 
-    console.log("Successfully registered application (/) commands.");
+      console.log("Successfully registered application (/) commands.");
+    } else {
+      await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), {
+        body: commands,
+      });
 
-    await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), {
-      body: commands,
-    });
-
-    console.log(
-      "Successfully registered application (/) commands globally, the commands can take up to 1 hour to appear."
-    );
+      console.log(
+        "Successfully registered application (/) commands globally, the commands can take up to 1 hour to appear."
+      );
+    }
   } catch (error) {
     console.error(error);
   }
