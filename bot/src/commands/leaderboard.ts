@@ -73,8 +73,37 @@ async function execute(interaction: ChatInputCommandInteraction) {
         return;
       }
 
+      const userGemsRow = await getPrismaClient().gems.findUnique({
+        where: {
+          user_id_guild_id: {
+            user_id: BigInt(interaction.user.id),
+            guild_id: BigInt(interaction.guildId!),
+          },
+        },
+      });
+
+      let userGemCount: number;
+      if (!userGemsRow) {
+        userGemCount = 0;
+      } else {
+        userGemCount = userGemsRow[type];
+      }
+
+      const userRank =
+        (await getPrismaClient().gems.count({
+          where: {
+            [type]: {
+              gt: userGemCount,
+            },
+          },
+        })) + 1;
+
       const embed = createEmbed(interaction, false).setTitle(
         `${type.charAt(0).toUpperCase() + type.slice(1)} Leaderboard`
+      );
+
+      embed.setDescription(
+        `You are ranked #${userRank} with ${userGemCount} ${type}.`
       );
 
       const fields: APIEmbedField[] = await Promise.all(
@@ -112,8 +141,37 @@ async function execute(interaction: ChatInputCommandInteraction) {
         return;
       }
 
+      const userProfileRow = await getPrismaClient().profile.findUnique({
+        where: {
+          user_id_guild_id: {
+            user_id: BigInt(interaction.user.id),
+            guild_id: BigInt(interaction.guildId!),
+          },
+        },
+      });
+
+      let userNetworth: bigint;
+      if (!userProfileRow) {
+        userNetworth = 0n;
+      } else {
+        userNetworth = userProfileRow.networth;
+      }
+
+      const userRank =
+        (await getPrismaClient().profile.count({
+          where: {
+            networth: {
+              gt: userNetworth,
+            },
+          },
+        })) + 1;
+
       const embed = createEmbed(interaction, false).setTitle(
         "Networth Leaderboard"
+      );
+
+      embed.setDescription(
+        `You are ranked #${userRank} with a networth of ${userNetworth}.`
       );
 
       const fields: APIEmbedField[] = await Promise.all(
