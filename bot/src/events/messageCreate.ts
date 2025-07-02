@@ -1,5 +1,6 @@
 import { GuildTextBasedChannel, Message } from "discord.js";
 
+import { MessageEntry } from "../utils/entries";
 import { getRedisClient } from "../clients/redis";
 
 export default async (message: Message) => {
@@ -12,7 +13,7 @@ export default async (message: Message) => {
     return;
   }
 
-  const messageEntry: Record<string, string> = {
+  const messageEntry: MessageEntry = {
     id: message.id,
     content: message.content,
     authorID: message.author.id,

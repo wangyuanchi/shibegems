@@ -108,11 +108,11 @@ x1.45 ruby_multiplier
 
 \`\`red topaz\`\`
 x1.5 garnet_multiplier
-1000 Topaz
+1,000 Topaz
 
 \`\`tempel-tuttle shard\`\`
 x2.5 painite_multiplier
-10000 Diamond 4 Garnet
+10,000 Diamond 4 Garnet
 `,
 };
 

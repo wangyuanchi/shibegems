@@ -1,3 +1,8 @@
+import { ChannelType } from "discord.js";
+import { LogEntry } from "../utils/entries";
+import { RareGemNames } from "../utils/gems";
+import { createEmbedDescriptionOnly } from "../utils/embed";
+import { getDiscordClient } from "../clients/discord";
 import { getRedisClient } from "../clients/redis";
 
 let running = true;
@@ -33,7 +38,7 @@ export async function logStreamHandler() {
         consumerGroupName,
         consumerName,
         { key: streamName, id: ">" },
-        { COUNT: 5, BLOCK: 5000 }
+        { COUNT: 5, BLOCK: 1000 } // Blocking needs to be short to look fast
       );
 
       if (!result) {
@@ -45,7 +50,29 @@ export async function logStreamHandler() {
     }
 
     for (const log of result[0].messages) {
-      console.log(log);
+      const logEntry: LogEntry = log.message as LogEntry;
+      try {
+        const channel = await getDiscordClient().channels.fetch(
+          logEntry.channelID
+        );
+
+        if (channel && channel.type === ChannelType.GuildText) {
+          if (
+            RareGemNames.includes(logEntry.gem) &&
+            Date.now() - Number(logEntry.createdTimestamp) <= 10000 // Make sure old gem drops are not logged
+          ) {
+            await channel.send({
+              embeds: [
+                createEmbedDescriptionOnly(
+                  `💎 ${logEntry.authorUsername} found a ${logEntry.gem}!`
+                ),
+              ],
+            });
+          }
+        }
+      } catch (err) {
+        console.error(`Failed to log in channel ${logEntry.channelID}:`, err);
+      }
 
       try {
         await redisClient.xAck(streamName, consumerGroupName, log.id);

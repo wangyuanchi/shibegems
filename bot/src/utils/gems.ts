@@ -13,6 +13,14 @@ export type GemName =
   | "garnet"
   | "painite";
 
+export const RareGemNames: GemName[] = [
+  "amethyst",
+  "kunzite",
+  "ruby",
+  "garnet",
+  "painite",
+];
+
 export type GemMultiplierName =
   | "diamond_multiplier"
   | "sunstone_multiplier"
