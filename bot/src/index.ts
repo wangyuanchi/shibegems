@@ -21,14 +21,15 @@ const discordClient = getDiscordClient();
 discordClient.once("ready", async () => {
   console.log(`Logged in as ${discordClient.user?.tag}`);
 
-  if (
-    !process.env.CLIENT_ID ||
-    !process.env.DEV_GUILD_ID ||
-    !process.env.TOKEN
-  ) {
+  if (!process.env.CLIENT_ID || !process.env.TOKEN) {
     console.error(
-      "Error: Ensure CLIENT_ID, DEV_GUILD_ID and TOKEN environment variables are defined"
+      "Error: Ensure CLIENT_ID and TOKEN environment variables are defined"
     );
+    return;
+  }
+
+  if (process.env.DEV_GUILD_ID === undefined) {
+    console.error("Error: Ensure DEV_GUILD_ID environment variable is defined");
     return;
   }
 
