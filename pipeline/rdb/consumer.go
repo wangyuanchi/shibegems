@@ -135,10 +135,26 @@ func processAcknowledgeDelete(ctx context.Context, pgq *postgres.Queries, client
 		deleted, err := client.XDel(ctx, streamName, message.ID).Result()
 		if err != nil {
 			log.Printf("[%v] Failed to delete message entry %v: %v", consumerName, message.ID, err)
+			continue
 		} else if deleted == 0 {
 			log.Printf("[%v] Message entry %v was already deleted", consumerName, message.ID)
+			continue
 		} else {
 			// log.Printf("[%v] Acknowledged and deleted message entry %v", consumerName, message.ID)
+		}
+
+		if gem != nil {
+			logEntry := messageEntry
+			logEntry["gem"] = gem.Name
+
+			_, err = client.XAdd(ctx, &redis.XAddArgs{
+				Stream: "logStream",
+				ID:     "*",
+				Values: logEntry,
+			}).Result()
+			if err != nil {
+				log.Printf("[%v] Failed to add log entry: %v", consumerName, err)
+			}
 		}
 	}
 }

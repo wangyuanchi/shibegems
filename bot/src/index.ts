@@ -4,6 +4,7 @@ import { REST, Routes } from "discord.js";
 import { connectDiscord, getDiscordClient } from "./clients/discord";
 import { getPrismaClient, handlePrismaConnection } from "./clients/prisma";
 import { getRedisClient, handleRedisConnection } from "./clients/redis";
+import { logStreamHandler, stopLogStreamHandler } from "./events/ready";
 
 import commands from "./commands/commands";
 import interactionCreate from "./events/interactionCreate";
@@ -43,16 +44,19 @@ discordClient.once("ready", async () => {
         { body: commands }
       );
 
-      console.log("Successfully registered application (/) commands.");
+      console.log("Successfully registered application (/) commands");
     } else {
       await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), {
         body: commands,
       });
 
       console.log(
-        "Successfully registered application (/) commands globally, the commands can take up to 1 hour to appear."
+        "Successfully registered application (/) commands globally, the commands can take up to 1 hour to appear"
       );
     }
+
+    logStreamHandler().catch((err) => console.error(err));
+    console.log("Started the logStream handler");
   } catch (error) {
     console.error(error);
   }
@@ -62,6 +66,8 @@ discordClient.on("interactionCreate", interactionCreate);
 discordClient.on("messageCreate", messageCreate);
 
 async function shutdown() {
+  stopLogStreamHandler();
+
   if (getRedisClient()?.isOpen) {
     console.log("Shutting down the Redis connection...");
     await getRedisClient().quit();
