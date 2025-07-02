@@ -47,6 +47,7 @@ const page3: Page = {
   title: "**✨ Gems ✨**",
   description: `These are the 13 possible gems you could get.
 Adding up the base chances, you have ~50% chance to roll any gem for a message.
+You will be notified in the channel you messaged in if you find a rare gem (from Amethyst onwards)!
 
 \`\`\`
 Type        Chance        Worth
@@ -71,7 +72,7 @@ The total number of each gem you have collected will be visible in your profile.
 const page4: Page = {
   title: "**🛒 Shop 🛒**",
   description: `
-The gem multiplier is multiplied to your base gem chance and also stacks.
+The gem multiplier is multiplied to your base gem chance.
 The item is only worth 90% of the gems you spend.
 
 \`\`seven of diamonds\`\`
